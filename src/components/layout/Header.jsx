@@ -3,7 +3,7 @@ import { Search, User, ShoppingCart, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { siteConfig } from '../../data/siteConfig';
 
-const Header = ({ onMenuClick, cartCount = 0 }) => {
+const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
@@ -29,9 +29,9 @@ const Header = ({ onMenuClick, cartCount = 0 }) => {
         </Link>
 
         <form className="header__search" onSubmit={handleSearch}>
-          <input 
-            type="text" 
-            className="header__search-input" 
+          <input
+            type="text"
+            className="header__search-input"
             placeholder="Buscar productos..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
