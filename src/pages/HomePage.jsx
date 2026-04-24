@@ -1,40 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '../components/layout/Layout';
 import HeroCarousel from '../components/home/HeroCarousel';
-import CategoryGrid from '../components/home/CategoryGrid';
 import ProductRow from '../components/home/ProductRow';
-import { products } from '../data/mockProducts';
+import { supabase } from '../config/supabase';
 
 const HomePage = () => {
-  // Mock logic to filter featured and offer products for the home rows
-  const featuredProducts = products.filter(p => p.featured);
-  const offerProducts = products.filter(p => p.inOffer);
-  const windows = products.filter(p => p.categoryId === 'cat-1');
+  const [products, setProducts] = useState([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const { data } = await supabase.from('products').select('*, product_variants(*)');
+      if (data) setProducts(data);
+    };
+    fetchProducts();
+  }, []);
 
   return (
     <Layout>
       <HeroCarousel />
-      <CategoryGrid />
-      
-      <ProductRow 
-        title="Productos Destacados" 
-        products={featuredProducts} 
-        seeAllLink="/categoria/destacados"
-      />
-
-      <ProductRow 
-        title="Ofertas Imperdibles" 
-        products={offerProducts} 
-        seeAllLink="/ofertas"
-      />
-
-      <ProductRow 
-        title="Ventanas de Aluminio" 
-        products={windows} 
-        seeAllLink="/categoria/ventanas"
-      />
-
-      {/* Secciones adicionales según sea necesario */}
+      <ProductRow title="Nuestros Productos" products={products} seeAllLink="/categoria/todos" />
     </Layout>
   );
 };

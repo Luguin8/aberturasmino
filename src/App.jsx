@@ -6,6 +6,7 @@ import './styles/home.css';
 import './styles/product.css';
 import './styles/cart.css';
 import './styles/pages.css';
+import './styles/admin.css';
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import CategoryPage from './pages/CategoryPage';
