@@ -31,7 +31,7 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
     <header className="sticky top-0 z-[500] w-full bg-white shadow-sm border-b border-gray-100">
       {/* Fila Superior */}
       <div className="py-4 md:py-6">
-        <Container className="flex items-center justify-between gap-6">
+        <Container fluid clean className="px-6 md:px-10 lg:px-16 xl:px-20 flex items-center justify-between gap-12 lg:gap-24">
 
           {/* Logo */}
           <Link to="/" className="flex items-center gap-4 group flex-shrink-0">
@@ -105,7 +105,7 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
 
       {/* Navegación: Corregido el espaciado (px-8) y el wrap (whitespace-nowrap) */}
       <div className="hidden md:block bg-gray-50 border-t border-gray-100">
-        <Container>
+        <Container fluid clean className="px-6 md:px-10 lg:px-16 xl:px-20">
           <nav className="flex items-center justify-center overflow-x-auto no-scrollbar py-2">
             <ul className="flex items-center gap-2">
               {navLinks.map((link) => {

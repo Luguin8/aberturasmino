@@ -1,5 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
+@source "./**/*.{js,jsx,ts,tsx,html}";
 
 /*
  * ============================================
@@ -54,114 +55,118 @@
   --z-toast: 500;
   --z-whatsapp: 600;
 
-  --spacing-header: 80px;
-  --spacing-topbar: 40px;
-  --spacing-navbar: 48px;
+  --header-height: 80px;
+  --topbar-height: 40px;
+  --navbar-height: 48px;
 }
 
-/* ===== CSS RESET & UTILIDADES ===== */
-*,
-*::before,
-*::after {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
+@layer base {
+  /* ===== CSS RESET & UTILIDADES ===== */
+  *,
+  *::before,
+  *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+
+  html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    font-family: var(--font-primary);
+    color: var(--color-text);
+    background-color: var(--color-bg);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: inherit;
+    font-size: inherit;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+
+  input,
+  textarea,
+  select {
+    font-family: inherit;
+    font-size: inherit;
+    outline: none;
+  }
+
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+  }
 }
 
-html {
-  font-size: 16px;
-  scroll-behavior: smooth;
-  -webkit-text-size-adjust: 100%;
-}
+@layer components {
+  /* ===== SCROLLBAR CUSTOM ===== */
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
 
-body {
-  font-family: var(--font-primary);
-  color: var(--color-text);
-  background-color: var(--color-bg);
-  line-height: 1.6;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  ::-webkit-scrollbar-track {
+    background: var(--color-bg);
+  }
 
-img {
-  max-width: 100%;
-  height: auto;
-  display: block;
-}
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-border);
+    border-radius: var(--radius-full);
+  }
 
-a {
-  text-decoration: none;
-  color: inherit;
-}
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-text-light);
+  }
 
-button {
-  cursor: pointer;
-  border: none;
-  background: none;
-  font-family: inherit;
-  font-size: inherit;
-}
+  /* debug: buscador */
+  .search-button-custom {
+    background-color: var(--color-primary) !important;
+    color: #ffffff !important;
+    padding: 0 3rem !important;
+    height: calc(100% - 12px) !important;
+    border-radius: 12px !important;
+    font-weight: 900 !important;
+    text-transform: uppercase !important;
+    font-size: 0.75rem !important;
+    transition: all 0.2s ease !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
 
-ul,
-ol {
-  list-style: none;
-}
-
-input,
-textarea,
-select {
-  font-family: inherit;
-  font-size: inherit;
-  outline: none;
-}
-
-.sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border-width: 0;
-}
-
-/* ===== SCROLLBAR CUSTOM ===== */
-::-webkit-scrollbar {
-  width: 8px;
-}
-
-::-webkit-scrollbar-track {
-  background: var(--color-bg);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: var(--radius-full);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-text-light);
-}
-
-/* debug: buscador */
-.search-button-custom {
-  background-color: var(--color-primary) !important;
-  color: #ffffff !important;
-  padding: 0 3rem !important;
-  height: calc(100% - 12px) !important;
-  border-radius: 12px !important;
-  font-weight: 900 !important;
-  text-transform: uppercase !important;
-  font-size: 0.75rem !important;
-  transition: all 0.2s ease !important;
-  display: flex !important;
-  align-items: center !important;
-  justify-content: center !important;
-}
-
-.search-button-custom:hover {
-  background-color: #2c3142 !important;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+  .search-button-custom:hover {
+    background-color: #2c3142 !important;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+  }
 }
