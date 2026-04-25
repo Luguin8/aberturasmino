@@ -1,20 +1,20 @@
 // src/components/layout/Layout.jsx
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import { X, Home, Tag, Package, HelpCircle } from 'lucide-react';
 import Header from './Header';
 import Footer from './Footer';
 import CartDrawer from '../cart/CartDrawer';
 import WhatsAppButton from '../ui/WhatsAppButton';
-import { CartContext } from '../../context/CartContext';
+import { useCart } from '../../context/CartContext';
 
 const Layout = ({ children }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isCartOpen, setIsCartOpen] = useState(false);
   const location = useLocation();
 
-  // Extraemos la info del carrito (Ajustá esto si tu context tiene otra estructura)
-  const { cart } = useContext(CartContext) || { cart: [] };
+  // CORRECCIÓN: Usamos tu custom hook en lugar de intentar extraer el Contexto directamente
+  const { cart } = useCart();
   const cartCount = cart?.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   // Rutas con IDs de Supabase y diseño accesible

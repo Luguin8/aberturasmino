@@ -1,7 +1,12 @@
+// src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './index.css';
 
+// Layout
+import Layout from './components/layout/Layout';
+
+// Pages
 import HomePage from './pages/HomePage';
 import ProductPage from './pages/ProductPage';
 import CategoryPage from './pages/CategoryPage';
@@ -26,27 +31,30 @@ function App() {
     <Router>
       <AuthProvider>
         <CartProvider>
-          <Routes>
-            {/* Rutas Públicas */}
-            <Route path="/" element={<HomePage />} />
-            <Route path="/producto/:slug" element={<ProductPage />} />
-            <Route path="/categoria/:slug" element={<CategoryPage />} />
-            <Route path="/ofertas" element={<CategoryPage />} />
-            <Route path="/preguntas-frecuentes" element={<FAQPage />} />
-            <Route path="/medios-de-pago" element={<PaymentMethodsPage />} />
-            <Route path="/checkout" element={<CheckoutPage />} />
-            <Route path="/success" element={<SuccessPage />} />
+          {/* Envolvemos todas las rutas en Layout para que el Header y el Cart sean globales */}
+          <Layout>
+            <Routes>
+              {/* Rutas Públicas */}
+              <Route path="/" element={<HomePage />} />
+              <Route path="/producto/:slug" element={<ProductPage />} />
+              <Route path="/categoria/:slug" element={<CategoryPage />} />
+              <Route path="/ofertas" element={<CategoryPage />} />
+              <Route path="/preguntas-frecuentes" element={<FAQPage />} />
+              <Route path="/medios-de-pago" element={<PaymentMethodsPage />} />
+              <Route path="/checkout" element={<CheckoutPage />} />
+              <Route path="/success" element={<SuccessPage />} />
 
-            {/* Ruta Pública pero oculta (Login del Admin) */}
-            <Route path="/admin/login" element={<AdminLogin />} />
+              {/* Ruta Pública pero oculta (Login del Admin) */}
+              <Route path="/admin/login" element={<AdminLogin />} />
 
-            {/* Rutas Protegidas (Solo accesible si estás logueado) */}
-            <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
-            <Route path="/admin/productos" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
-            <Route path="/admin/pedidos" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
+              {/* Rutas Protegidas (Solo accesible si estás logueado) */}
+              <Route path="/admin" element={<ProtectedRoute><AdminDashboard /></ProtectedRoute>} />
+              <Route path="/admin/productos" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
+              <Route path="/admin/pedidos" element={<ProtectedRoute><AdminOrders /></ProtectedRoute>} />
 
-            <Route path="*" element={<HomePage />} />
-          </Routes>
+              <Route path="*" element={<HomePage />} />
+            </Routes>
+          </Layout>
         </CartProvider>
       </AuthProvider>
     </Router>
