@@ -18,98 +18,94 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
     }
   };
 
-  // Rutas con íconos específicos de Lucide
   const navLinks = [
-    { label: 'Inicio', path: '/', icon: <Home size={20} /> },
-    { label: 'Ofertas', path: '/ofertas', icon: <Tag size={20} />, isHighlight: true },
-    { label: 'Ventanas', path: '/categoria/6ec021b8-c3c7-4be2-a822-b02019a9c52b', icon: <LayoutGrid size={20} /> },
-    { label: 'Puertas', path: '/categoria/9abab4ac-c816-458c-9f5a-cfbb18aa0cae', icon: <DoorClosed size={20} /> },
-    { label: 'Muebles', path: '/categoria/muebles-proximamente', icon: <Sofa size={20} /> },
-    { label: 'Preguntas Frecuentes', path: '/preguntas-frecuentes', icon: <HelpCircle size={20} /> },
+    { label: 'Inicio', path: '/', icon: <Home size={18} /> },
+    { label: 'Ofertas', path: '/ofertas', icon: <Tag size={18} />, isHighlight: true },
+    { label: 'Ventanas', path: '/categoria/6ec021b8-c3c7-4be2-a822-b02019a9c52b', icon: <LayoutGrid size={18} /> },
+    { label: 'Puertas', path: '/categoria/9abab4ac-c816-458c-9f5a-cfbb18aa0cae', icon: <DoorClosed size={18} /> },
+    { label: 'Muebles', path: '/categoria/muebles-proximamente', icon: <Sofa size={18} /> },
+    { label: 'Preguntas Frecuentes', path: '/preguntas-frecuentes', icon: <HelpCircle size={18} /> },
   ];
 
   return (
-    <header className="sticky top-0 z-[200] bg-white shadow-md border-b border-gray-100 flex flex-col">
-      <div className="py-4">
-        {/* Agregamos px-4-6 extra al container para separar del borde de la pantalla */}
-        <Container className="flex items-center justify-between gap-6 md:gap-10">
+    <header className="sticky top-0 z-[500] w-full bg-white shadow-sm border-b border-gray-100">
+      {/* Fila Superior */}
+      <div className="py-4 md:py-6">
+        <Container className="flex items-center justify-between gap-6">
 
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden w-12 h-12 flex-shrink-0"
-            onClick={onMenuClick}
-            aria-label="Abrir menú"
-          >
-            <Menu size={28} className="text-secondary" />
-          </Button>
-
-          {/* Logo con margen izquierdo para que no pegue al borde */}
-          <Link to="/" className="flex items-center gap-4 group ml-2 md:ml-0">
-            <div className="w-12 h-12 md:w-16 md:h-16 bg-gray-50 rounded-xl flex items-center justify-center border-2 border-gray-100 overflow-hidden flex-shrink-0 transition-transform group-hover:scale-105">
-              <span className="text-[10px] md:text-xs text-gray-400 font-black">LOGO</span>
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-4 group flex-shrink-0">
+            <div className="w-12 h-12 md:w-14 md:h-14 bg-secondary text-white rounded-xl flex items-center justify-center font-black text-xs transition-transform group-hover:scale-105">
+              AM
             </div>
-            <div className="flex flex-col">
-              <h1 className="text-xl md:text-2xl font-black text-secondary leading-none tracking-tight">
+            <div className="hidden sm:flex flex-col">
+              <h1 className="text-xl md:text-2xl font-black text-secondary leading-none">
                 Aberturas <span className="text-primary">Miño</span>
               </h1>
-              <span className="text-[9px] md:text-[11px] text-gray-500 font-bold uppercase tracking-wider mt-1">
+              <p className="text-[10px] text-gray-500 font-bold uppercase tracking-widest mt-1">
                 {siteConfig.businessSubtitle}
-              </span>
+              </p>
             </div>
           </Link>
 
-          {/* Buscador con padding corregido */}
-          <form className="hidden md:flex flex-1 max-w-xl relative" onSubmit={handleSearch}>
+          {/* Buscador: Corregido el solapamiento con pl-14 */}
+          <form className="hidden md:flex flex-1 max-w-2xl relative group" onSubmit={handleSearch}>
+            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
+              <Search size={20} />
+            </div>
             <input
               type="text"
-              className="w-full h-14 bg-gray-50 border-2 border-gray-200 focus:border-primary focus:bg-white rounded-2xl pl-12 pr-14 text-lg font-bold text-secondary transition-all outline-none placeholder:text-gray-400"
-              placeholder="¿Qué buscás?"
+              className="w-full h-14 bg-gray-50 border-2 border-gray-100 focus:border-primary focus:bg-white rounded-2xl pl-14 pr-16 text-base font-bold text-secondary transition-all outline-none placeholder:text-gray-400"
+              placeholder="¿Qué estás buscando hoy?"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-            <div className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400">
-              <Search size={20} />
-            </div>
             <button
               type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 p-3 bg-primary text-white rounded-xl hover:bg-primary-hover"
+              className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-primary text-white text-sm font-black rounded-xl hover:bg-primary-hover transition-colors"
             >
-              <Search size={22} />
+              BUSCAR
             </button>
           </form>
 
-          {/* Acciones del Header */}
-          <div className="flex items-center gap-3">
+          {/* Carrito y Admin */}
+          <div className="flex items-center gap-2 md:gap-4 flex-shrink-0">
             <Link to="/admin" className="hidden lg:block">
-              <Button variant="ghost" className="h-14 px-4 hover:bg-gray-100">
-                <User size={24} className="text-gray-600" />
-                <span className="ml-2 font-bold text-gray-700">Admin</span>
+              <Button variant="ghost" className="h-12 px-4 font-bold text-gray-600">
+                <User size={20} className="mr-2" /> Admin
               </Button>
             </Link>
 
-            {/* Botón Carrito Reforzado: Forzamos el color para que no se vea vacío */}
             <button
               onClick={onCartClick}
-              className="relative flex items-center gap-3 h-12 md:h-14 px-4 md:px-6 bg-secondary text-white rounded-xl hover:bg-secondary-hover transition-all shadow-lg"
+              className="relative flex items-center gap-3 h-12 md:h-14 px-5 md:px-8 bg-secondary text-white rounded-xl hover:bg-secondary-hover transition-all shadow-md active:scale-95"
             >
-              <ShoppingCart size={24} />
-              <span className="hidden md:inline text-lg font-black uppercase tracking-tight">Mi Pedido</span>
+              <ShoppingCart size={22} />
+              <span className="hidden md:inline text-base font-black uppercase tracking-tight">Mi Pedido</span>
               {cartCount > 0 && (
-                <span className="absolute -top-2 -right-2 bg-primary text-white text-xs w-7 h-7 rounded-full flex items-center justify-center border-[3px] border-white font-black">
+                <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-6 h-6 rounded-full flex items-center justify-center border-2 border-white font-black shadow-sm">
                   {cartCount}
                 </span>
               )}
             </button>
+
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={onMenuClick}
+            >
+              <Menu size={28} className="text-secondary" />
+            </Button>
           </div>
         </Container>
       </div>
 
-      {/* Navegación Desktop con más padding y centrado */}
-      <div className="hidden md:block bg-gray-50/80 border-t border-gray-200 backdrop-blur-sm">
+      {/* Navegación: Corregido el espaciado (px-8) y el wrap (whitespace-nowrap) */}
+      <div className="hidden md:block bg-gray-50 border-t border-gray-100">
         <Container>
-          <nav className="flex items-center justify-center h-16">
-            <ul className="flex items-center gap-4">
+          <nav className="flex items-center justify-center overflow-x-auto no-scrollbar py-2">
+            <ul className="flex items-center gap-2">
               {navLinks.map((link) => {
                 const isActive = location.pathname === link.path;
                 return (
@@ -117,12 +113,12 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
                     <Link
                       to={link.path}
                       className={`
-                        flex items-center gap-2 px-6 py-3 rounded-xl text-[15px] font-black transition-all h-12 uppercase
+                        flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-black transition-all whitespace-nowrap uppercase tracking-tighter
                         ${link.isHighlight
-                          ? 'bg-primary text-white hover:bg-primary-hover shadow-md'
+                          ? 'bg-red-600 text-white hover:bg-red-700 shadow-sm'
                           : isActive
-                            ? 'bg-white text-primary border-2 border-primary/20 shadow-sm'
-                            : 'text-gray-500 hover:bg-white hover:text-primary border-2 border-transparent'
+                            ? 'bg-white text-primary border border-gray-200 shadow-sm'
+                            : 'text-gray-500 hover:text-primary hover:bg-white'
                         }
                       `}
                     >

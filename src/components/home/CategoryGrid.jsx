@@ -1,65 +1,57 @@
-import React, { useState, useEffect } from 'react';
+// src/components/home/CategoryGrid.jsx
+import React from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../../config/supabase';
+import { LayoutGrid, DoorClosed, Sofa, ArrowRight } from 'lucide-react';
 import Container from '../ui/Container';
 
+const categories = [
+  {
+    id: '6ec021b8-c3c7-4be2-a822-b02019a9c52b',
+    name: 'Ventanas',
+    icon: <LayoutGrid size={40} />,
+    color: 'bg-blue-50 text-blue-600',
+    desc: 'Aluminio y PVC de alta calidad'
+  },
+  {
+    id: '9abab4ac-c816-458c-9f5a-cfbb18aa0cae',
+    name: 'Puertas',
+    icon: <DoorClosed size={40} />,
+    color: 'bg-orange-50 text-orange-600',
+    desc: 'Seguridad y diseño para tu hogar'
+  },
+  {
+    id: 'muebles-proximamente',
+    name: 'Muebles',
+    icon: <Sofa size={40} />,
+    color: 'bg-purple-50 text-purple-600',
+    desc: 'Próximamente: Amoblamientos'
+  },
+];
+
 const CategoryGrid = () => {
-  const [categories, setCategories] = useState([]);
-
-  useEffect(() => {
-    const fetchCats = async () => {
-      const { data } = await supabase.from('categories').select('*');
-      if (data) setCategories(data);
-    };
-    fetchCats();
-  }, []);
-
-  // Mapeo de imágenes generadas a categorías (basado en nombre o id)
-  const getCategoryImage = (name) => {
-    const n = name.toLowerCase();
-    if (n.includes('ventana')) return '/images/categories/ventanas.png';
-    if (n.includes('puerta')) return '/images/categories/puertas.png';
-    return '/images/hero/hero_3.png'; // Fallback a una imagen de calidad
-  };
-
   return (
-    <section className="py-24 bg-white">
+    <section className="py-20 bg-white">
       <Container>
-        <div className="text-center mb-16 space-y-4">
-          <h2 className="text-4xl font-black text-secondary uppercase tracking-tight">
-            Comprá por Categoría
+        <div className="text-center mb-12">
+          <h2 className="text-3xl md:text-4xl font-black text-secondary uppercase italic">
+            Explorá por <span className="text-primary underline">Categoría</span>
           </h2>
-          <div className="w-24 h-1.5 bg-primary mx-auto rounded-full"></div>
-          <p className="text-gray-400 font-medium max-w-lg mx-auto">
-            Explorá nuestra variedad de productos fabricados con los más altos estándares de calidad.
-          </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-          {categories.map((category) => (
-            <Link 
-              to={`/categoria/${category.id}`} 
-              key={category.id} 
-              className="group relative h-80 rounded-[2rem] overflow-hidden shadow-xl hover:shadow-primary/20 transition-all duration-500"
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {categories.map((cat) => (
+            <Link
+              key={cat.id}
+              to={`/categoria/${cat.id}`}
+              className="group relative bg-gray-50 rounded-[2.5rem] p-10 flex flex-col items-center text-center transition-all hover:bg-white hover:shadow-2xl hover:shadow-gray-200 border-2 border-transparent hover:border-primary/10"
             >
-              {/* Image with zoom effect */}
-              <div className="absolute inset-0 z-0">
-                <img 
-                  src={getCategoryImage(category.name)} 
-                  alt={category.name} 
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-secondary/90 via-secondary/20 to-transparent opacity-80 group-hover:opacity-90 transition-opacity"></div>
+              <div className={`w-24 h-24 ${cat.color} rounded-3xl flex items-center justify-center mb-6 transition-transform group-hover:scale-110 group-hover:rotate-3`}>
+                {cat.icon}
               </div>
-              
-              <div className="absolute inset-0 p-10 flex flex-col justify-end z-10">
-                <h3 className="text-2xl font-black text-white mb-2 transform group-hover:-translate-y-2 transition-transform duration-500 uppercase tracking-tight">
-                  {category.name}
-                </h3>
-                <div className="flex items-center gap-2 text-primary font-bold text-sm opacity-0 group-hover:opacity-100 translate-y-4 group-hover:translate-y-0 transition-all duration-500">
-                  Explorar Colección
-                  <div className="w-8 h-[2px] bg-primary"></div>
-                </div>
+              <h3 className="text-2xl font-black text-secondary mb-2">{cat.name}</h3>
+              <p className="text-gray-500 font-medium mb-6">{cat.desc}</p>
+              <div className="flex items-center gap-2 text-primary font-black text-sm uppercase">
+                Ver productos <ArrowRight size={16} />
               </div>
             </Link>
           ))}

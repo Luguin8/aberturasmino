@@ -115,13 +115,6 @@ select {
   outline: none;
 }
 
-/* Container Utility Manual (Opcional, en Tailwind v4 puedes usar el container por defecto, pero mantengo tu estándar) */
-.container {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 20px;
-}
-
 .sr-only {
   position: absolute;
   width: 1px;
