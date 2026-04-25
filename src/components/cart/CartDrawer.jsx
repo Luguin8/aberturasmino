@@ -2,25 +2,62 @@ import React from 'react';
 import { X, Trash2, ShoppingBag } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 
-const CartDrawer = ({ isOpen, onClose }) => {
-  const { cartItems, removeFromCart, updateQuantity, cartTotal } = useCart();
+const CartDrawer = () => {
+  const {
+    cart,
+    isCartOpen,
+    setIsCartOpen,
+    removeFromCart,
+    updateQuantity,
+    cartTotal,
+    cartCount
+  } = useCart();
 
-  if (!isOpen) return null;
+  const formatPrice = (price) => {
+    return new Intl.NumberFormat('es-AR', {
+      style: 'currency',
+      currency: 'ARS',
+      minimumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const handleWhatsAppCheckout = () => {
+    const message = `Hola! Quisiera realizar el siguiente pedido en Aberturas Miño:\n\n` +
+      cart.map(item => `- ${item.name} (Cantidad: ${item.quantity}) - ${formatPrice(item.salePrice * item.quantity)}`).join('\n') +
+      `\n\n*Total: ${formatPrice(cartTotal)}*` +
+      `\n\nMuchas gracias!`;
+
+    const encodedMessage = encodeURIComponent(message);
+    window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${encodedMessage}`, '_blank');
+  };
 
   return (
     <div className={`cart-drawer ${isOpen ? 'is-open' : ''}`}>
       <div className="cart-drawer__overlay" onClick={onClose}></div>
       <div className="cart-drawer__content">
         <div className="cart-drawer__header">
-          <h3>Tu Carrito</h3>
-          <button className="btn-icon" onClick={onClose}><X size={24} /></button>
+          <div className="cart-drawer__title">
+            <ShoppingBag size={24} />
+            Tu Carrito
+            <span className="cart-drawer__count">{cartCount}</span>
+          </div>
+          <button className="cart-drawer__close" onClick={() => setIsCartOpen(false)}>
+            <X size={24} />
+          </button>
         </div>
 
         <div className="cart-drawer__items">
           {cartItems.length === 0 ? (
             <div className="cart-drawer__empty">
-              <ShoppingBag size={48} />
+              <ShoppingBag size={64} />
               <p>Tu carrito está vacío</p>
+              <button
+                className="product-info__btn product-info__btn--primary"
+                style={{ marginTop: '20px' }}
+                onClick={() => setIsCartOpen(false)}
+              >
+                Empezar a comprar
+              </button>
             </div>
           ) : (
             cartItems.map((item) => (
@@ -57,7 +94,17 @@ const CartDrawer = ({ isOpen, onClose }) => {
               <span>Total:</span>
               <span>${(cartTotal || 0).toLocaleString()}</span>
             </div>
-            <button className="btn btn-primary w-100 mt-3">Finalizar Compra</button>
+            <div className="cart-drawer__transfer">
+              <span>Pagando por transferencia (20% OFF):</span>
+              <span>{formatPrice(cartTotal * 0.8)}</span>
+            </div>
+            <button
+              className="cart-drawer__checkout-btn cart-drawer__checkout-btn--whatsapp"
+              onClick={handleWhatsAppCheckout}
+            >
+              <MessageCircle size={20} />
+              Finalizar Pedido por WhatsApp
+            </button>
           </div>
         )}
       </div>

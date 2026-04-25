@@ -52,7 +52,7 @@ const ProductCard = ({ product }) => {
         </div>
 
         <button className="btn btn-primary w-100 mt-3" onClick={handleAddToCart}>
-          <ShoppingCart size={18} /> Agregar
+         <ShoppingCart size={18} /> Sumar al pedido
         </button>
       </div>
     </Link>

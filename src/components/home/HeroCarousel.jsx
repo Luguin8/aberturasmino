@@ -5,10 +5,10 @@ import { Link } from 'react-router-dom';
 const heroSlides = [
   {
     id: 1,
-    title: "Calidad en Aberturas",
-    subtitle: "Fabricación a medida con los mejores materiales",
+    title: "Aberturas Miño",
+    subtitle: "Desde Esquina, Corrientes, directo para tu obra o tu campo. Fabricación a medida con la mejor calidad.",
     image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
-    ctaText: "Ver Catálogo",
+    ctaText: "Ver catálogo de aberturas",
     ctaLink: "/categoria/todos"
   }
 ];
