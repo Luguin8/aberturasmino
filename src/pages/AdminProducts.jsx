@@ -26,8 +26,6 @@ const AdminProducts = () => {
 
   const [formData, setFormData] = useState(initialFormState);
 
-  useEffect(() => { fetchInitialData(); }, []);
-
   const fetchInitialData = async () => {
     setLoading(true);
     const { data: cats } = await supabase.from('categories').select('*');
@@ -36,6 +34,8 @@ const AdminProducts = () => {
     if (prods) setProducts(prods);
     setLoading(false);
   };
+
+  useEffect(() => { fetchInitialData(); }, []);
 
   const handleEdit = (product) => {
     setEditingProduct(product);

@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import Layout from '../components/layout/Layout';
 import HeroCarousel from '../components/home/HeroCarousel';
 import CategoryGrid from '../components/home/CategoryGrid';
 import ProductRow from '../components/home/ProductRow';
@@ -30,24 +29,23 @@ const HomePage = () => {
     fetchHomeData();
   }, []);
 
-  const featuredProducts = products.filter(p => p.is_featured);
-  const offerProducts = products.filter(p => p.in_offer);
+  const safeProducts = Array.isArray(products) ? products : [];
+  const featuredProducts = safeProducts.filter(p => p && p.is_featured);
+  const offerProducts = safeProducts.filter(p => p && p.in_offer);
 
   if (loading) {
     return (
-      <Layout>
-        <Container className="py-40 text-center space-y-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="text-gray-400 font-bold animate-pulse uppercase tracking-widest text-xs">
-            Cargando catálogo premium...
-          </p>
-        </Container>
-      </Layout>
+      <Container className="py-40 text-center space-y-4">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p className="text-gray-400 font-bold animate-pulse uppercase tracking-widest text-xs">
+          Cargando catálogo premium...
+        </p>
+      </Container>
     );
   }
 
   return (
-    <Layout>
+    <>
       <HeroCarousel />
       <CategoryGrid />
 
@@ -75,7 +73,7 @@ const HomePage = () => {
           </div>
         </Container>
       )}
-    </Layout>
+    </>
   );
 };
 

@@ -2,7 +2,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { CheckCircle2, MessageCircle, Phone, MapPin, Mail, ArrowRight } from 'lucide-react';
-import Layout from '../components/layout/Layout';
 import Container from '../components/ui/Container';
 import Button from '../components/ui/Button';
 import { siteConfig } from '../data/siteConfig';
@@ -13,7 +12,7 @@ const SuccessPage = () => {
   }, []);
 
   return (
-    <Layout>
+    <>
       <div className="bg-bg min-h-screen py-20">
         <Container>
           <div className="max-w-3xl mx-auto">
@@ -111,7 +110,7 @@ const SuccessPage = () => {
           </div>
         </Container>
       </div>
-    </Layout>
+    </>
   );
 };
 

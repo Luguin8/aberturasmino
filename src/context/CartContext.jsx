@@ -12,38 +12,50 @@ export const useCart = () => {
 
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState(() => {
-    const savedCart = localStorage.getItem('aberturas_mino_cart');
-    return savedCart ? JSON.parse(savedCart) : [];
+    try {
+      const savedCart = localStorage.getItem('aberturas_mino_cart');
+      if (!savedCart) return [];
+      const parsed = JSON.parse(savedCart);
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (error) {
+      console.error("Error parsing cart from localStorage:", error);
+      return [];
+    }
   });
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('aberturas_mino_cart', JSON.stringify(cart));
+    try {
+      localStorage.setItem('aberturas_mino_cart', JSON.stringify(cart));
+    } catch (error) {
+      console.error("Error saving cart to localStorage:", error);
+    }
   }, [cart]);
 
   const addToCart = (product, quantity = 1) => {
     setCart((prevCart) => {
-      const existingItem = prevCart.find((item) => item.id === product.id);
+      const cartArray = Array.isArray(prevCart) ? prevCart : [];
+      const existingItem = cartArray.find((item) => item.id === product.id);
       if (existingItem) {
-        return prevCart.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + quantity } : item
+        return cartArray.map((item) =>
+          item.id === product.id ? { ...item, quantity: (item.quantity || 0) + quantity } : item
         );
       }
-      return [...prevCart, { ...product, quantity }];
+      return [...cartArray, { ...product, quantity }];
     });
     setIsCartOpen(true);
   };
 
   const removeFromCart = (productId) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== productId));
+    setCart((prevCart) => (Array.isArray(prevCart) ? prevCart.filter((item) => item.id !== productId) : []));
   };
 
   const updateQuantity = (productId, quantity) => {
     if (quantity < 1) return;
     setCart((prevCart) =>
-      prevCart.map((item) =>
+      (Array.isArray(prevCart) ? prevCart.map((item) =>
         item.id === productId ? { ...item, quantity } : item
-      )
+      ) : [])
     );
   };
 
@@ -51,12 +63,18 @@ export const CartProvider = ({ children }) => {
     setCart([]);
   };
 
-  const cartTotal = cart.reduce((total, item) => total + item.salePrice * item.quantity, 0);
-  const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
+  const safeCart = Array.isArray(cart) ? cart : [];
+  const cartTotal = safeCart.reduce((total, item) => {
+    const price = item.salePrice || item.price || 0;
+    const qty = item.quantity || 0;
+    return total + (price * qty);
+  }, 0);
+  
+  const cartCount = safeCart.reduce((total, item) => total + (item.quantity || 0), 0);
 
   return (
     <CartContext.Provider value={{
-      cart,
+      cart: safeCart,
       addToCart,
       removeFromCart,
       updateQuantity,

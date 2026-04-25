@@ -1,6 +1,5 @@
 import React from 'react';
 import { CreditCard, Banknote, Smartphone, Wallet, Check, ShieldCheck, Info } from 'lucide-react';
-import Layout from '../components/layout/Layout';
 import { paymentMethods } from '../data/mockPaymentMethods';
 import Container from '../components/ui/Container';
 import Badge from '../components/ui/Badge';
@@ -14,7 +13,7 @@ const IconMap = {
 
 const PaymentMethodsPage = () => {
   return (
-    <Layout>
+    <>
       <div className="bg-gray-50 min-h-screen py-20">
         <Container>
           <div className="max-w-4xl mx-auto space-y-16">
@@ -89,7 +88,7 @@ const PaymentMethodsPage = () => {
           </div>
         </Container>
       </div>
-    </Layout>
+    </>
   );
 };
 

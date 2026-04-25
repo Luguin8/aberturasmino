@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ShoppingBag, CreditCard, Banknote, MessageCircle, ArrowLeft, Trash2, CheckCircle2, ShieldCheck, ChevronRight } from 'lucide-react';
-import Layout from '../components/layout/Layout';
 import { useCart } from '../context/CartContext';
 import { siteConfig } from '../data/siteConfig';
 import { supabase } from '../config/supabase';
@@ -93,27 +92,25 @@ const CheckoutPage = () => {
 
   if (cart.length === 0) {
     return (
-      <Layout>
-        <Container className="py-40 flex flex-col items-center justify-center text-center space-y-8">
-          <div className="w-32 h-32 bg-gray-50 rounded-full flex items-center justify-center text-gray-200">
-            <ShoppingBag size={64} />
-          </div>
-          <div className="space-y-4">
-            <h1 className="text-4xl font-black text-secondary uppercase tracking-tight">Tu pedido está vacío</h1>
-            <p className="text-gray-400 font-medium max-w-md mx-auto">Parece que aún no has agregado ninguna abertura a tu presupuesto personalizado.</p>
-          </div>
-          <Link to="/">
-            <Button variant="primary" className="h-14 px-10">
-               Explorar Catálogo
-            </Button>
-          </Link>
-        </Container>
-      </Layout>
+      <Container className="py-40 flex flex-col items-center justify-center text-center space-y-8">
+        <div className="w-32 h-32 bg-gray-50 rounded-full flex items-center justify-center text-gray-200">
+          <ShoppingBag size={64} />
+        </div>
+        <div className="space-y-4">
+          <h1 className="text-4xl font-black text-secondary uppercase tracking-tight">Tu pedido está vacío</h1>
+          <p className="text-gray-400 font-medium max-w-md mx-auto">Parece que aún no has agregado ninguna abertura a tu presupuesto personalizado.</p>
+        </div>
+        <Link to="/">
+          <Button variant="primary" className="h-14 px-10">
+             Explorar Catálogo
+          </Button>
+        </Link>
+      </Container>
     );
   }
 
   return (
-    <Layout>
+    <>
       <div className="bg-gray-50 min-h-screen py-10 md:py-20">
         <Container>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
@@ -287,7 +284,7 @@ const CheckoutPage = () => {
           </div>
         </Container>
       </div>
-    </Layout>
+    </>
   );
 };
 

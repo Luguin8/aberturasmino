@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import Layout from '../components/layout/Layout';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../config/supabase';
 import { Check, ChevronRight, ShoppingCart, MessageCircle, ArrowLeft, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
@@ -67,17 +66,15 @@ const ProductPage = () => {
 
   if (loading) {
     return (
-      <Layout>
-        <Container className="py-40 text-center space-y-4">
-          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Cargando detalles...</p>
-        </Container>
-      </Layout>
+      <Container className="py-40 text-center space-y-4">
+        <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+        <p className="text-gray-400 font-bold uppercase tracking-widest text-xs">Cargando detalles...</p>
+      </Container>
     );
   }
 
   return (
-    <Layout>
+    <>
       <div className="bg-gray-50 min-h-screen py-10 md:py-16">
         <Container>
           {/* Breadcrumbs */}
@@ -255,7 +252,7 @@ const ProductPage = () => {
           </div>
         </Container>
       </div>
-    </Layout>
+    </>
   );
 };
 

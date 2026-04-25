@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import Layout from '../components/layout/Layout';
 import ProductCard from '../components/home/ProductCard';
 import { supabase } from '../config/supabase';
 import Container from '../components/ui/Container';
@@ -23,7 +22,7 @@ const CategoryPage = () => {
           'ofertas': 'Ofertas Exclusivas'
         };
         setCategoryName(titleMap[slug] || 'Catálogo');
-        
+
         let query = supabase.from('products').select('*, product_variants(*)');
         if (slug === 'destacados') query = query.eq('is_featured', true);
         if (slug === 'ofertas') query = query.eq('in_offer', true);
@@ -45,7 +44,7 @@ const CategoryPage = () => {
   }, [slug]);
 
   return (
-    <Layout>
+    <>
       <div className="bg-gray-50 min-h-screen py-10 md:py-20">
         <Container>
           {/* Breadcrumbs */}
@@ -57,20 +56,20 @@ const CategoryPage = () => {
 
           <div className="flex flex-col md:flex-row justify-between items-end gap-6 mb-16 border-b border-gray-200 pb-10">
             <div className="space-y-4">
-               <h1 className="text-5xl md:text-6xl font-black text-secondary uppercase tracking-tighter leading-none">
-                 {categoryName.split(' ')[0]} <span className="text-primary">{categoryName.split(' ').slice(1).join(' ')}</span>
-               </h1>
-               <p className="text-gray-400 font-medium max-w-xl text-lg">
-                 Explorá nuestra colección de aberturas de alta gama, diseñadas para brindar seguridad, estilo y confort a tu hogar.
-               </p>
+              <h1 className="text-5xl md:text-6xl font-black text-secondary uppercase tracking-tighter leading-none">
+                {categoryName.split(' ')[0]} <span className="text-primary">{categoryName.split(' ').slice(1).join(' ')}</span>
+              </h1>
+              <p className="text-gray-400 font-medium max-w-xl text-lg">
+                Explorá nuestra colección de aberturas de alta gama, diseñadas para brindar seguridad, estilo y confort a tu hogar.
+              </p>
             </div>
             <div className="flex items-center gap-4 bg-white p-2 rounded-2xl shadow-sm border border-gray-100">
-               <div className="px-4 py-2 bg-gray-50 rounded-xl text-gray-400">
-                  <LayoutGrid size={18} />
-               </div>
-               <div className="px-4 py-2 text-gray-300">
-                  <Filter size={18} />
-               </div>
+              <div className="px-4 py-2 bg-gray-50 rounded-xl text-gray-400">
+                <LayoutGrid size={18} />
+              </div>
+              <div className="px-4 py-2 text-gray-300">
+                <Filter size={18} />
+              </div>
             </div>
           </div>
 
@@ -87,16 +86,16 @@ const CategoryPage = () => {
             </div>
           ) : (
             <div className="py-32 text-center bg-white rounded-[3rem] border border-dashed border-gray-200">
-               <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-200 mx-auto mb-6">
-                  <Filter size={40} />
-               </div>
-               <h3 className="text-2xl font-black text-secondary uppercase tracking-tight mb-2">Sin Resultados</h3>
-               <p className="text-gray-400 font-medium max-w-xs mx-auto">No hay productos disponibles en esta categoría por el momento. ¡Pronto subiremos novedades!</p>
+              <div className="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center text-gray-200 mx-auto mb-6">
+                <Filter size={40} />
+              </div>
+              <h3 className="text-2xl font-black text-secondary uppercase tracking-tight mb-2">Sin Resultados</h3>
+              <p className="text-gray-400 font-medium max-w-xs mx-auto">No hay productos disponibles en esta categoría por el momento. ¡Pronto subiremos novedades!</p>
             </div>
           )}
         </Container>
       </div>
-    </Layout>
+    </>
   );
 };
 

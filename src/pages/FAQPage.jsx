@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { ChevronDown, HelpCircle, MessageCircle } from 'lucide-react';
-import Layout from '../components/layout/Layout';
 import { faqs } from '../data/mockFAQs';
 import Container from '../components/ui/Container';
 import Button from '../components/ui/Button';
@@ -13,7 +12,7 @@ const FAQPage = () => {
   };
 
   return (
-    <Layout>
+    <>
       <div className="bg-gray-50 min-h-screen py-20">
         <Container>
           <div className="max-w-3xl mx-auto space-y-12">
@@ -68,7 +67,7 @@ const FAQPage = () => {
           </div>
         </Container>
       </div>
-    </Layout>
+    </>
   );
 };
 

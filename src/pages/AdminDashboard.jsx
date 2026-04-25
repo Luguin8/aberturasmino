@@ -12,10 +12,6 @@ const AdminDashboard = () => {
     { id: 4, label: 'Facturación', value: '$0', icon: TrendingUp, color: 'text-orange-600', bg: 'bg-orange-50' },
   ]);
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
-
   const fetchStats = async () => {
     try {
       const { count: productCount } = await supabase.from('products').select('*', { count: 'exact', head: true });
@@ -32,6 +28,10 @@ const AdminDashboard = () => {
       console.error('Error cargando estadísticas:', error);
     }
   };
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
 
   return (
     <AdminLayout title="Dashboard">
