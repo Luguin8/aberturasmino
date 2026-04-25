@@ -1,43 +1,34 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChevronDown } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { categories } from '../../data/mockCategories';
+import { supabase } from '../../config/supabase';
 
 const Navbar = ({ isOpen }) => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const getCategories = async () => {
+      const { data } = await supabase.from('categories').select('*');
+      if (data) setCategories(data);
+    };
+    getCategories();
+  }, []);
+
   return (
-    <nav className={`navbar ${isOpen ? 'navbar--mobile-open' : ''}`}>
+    <nav className={`navbar ${isOpen ? 'is-open' : ''}`}>
       <div className="container">
         <ul className="navbar__list">
-          {categories.map((cat) => (
-            <li key={cat.id} className="navbar__item">
-              <Link to={`/categoria/${cat.slug}`} className="navbar__link">
-                {cat.name}
-                {cat.subcategories && cat.subcategories.length > 0 && (
-                  <ChevronDown size={14} />
-                )}
-              </Link>
-              
-              {cat.subcategories && cat.subcategories.length > 0 && (
-                <div className="navbar__dropdown">
-                  {cat.subcategories.map((sub) => (
-                    <Link 
-                      key={sub.id} 
-                      to={`/categoria/${sub.slug}`} 
-                      className="navbar__dropdown-link"
-                    >
-                      {sub.name}
-                    </Link>
-                  ))}
-                </div>
-              )}
-            </li>
-          ))}
-          <li className="navbar__item">
-            <Link to="/ofertas" className="navbar__link">Ofertas</Link>
+          <li className="navbar__item"><Link to="/" className="navbar__link">Inicio</Link></li>
+          <li className="navbar__item has-dropdown">
+            <span className="navbar__link">Productos <ChevronDown size={16} /></span>
+            <ul className="navbar__dropdown">
+              {categories.map(cat => (
+                <li key={cat.id}><Link to={`/categoria/${cat.id}`}>{cat.name}</Link></li>
+              ))}
+            </ul>
           </li>
-          <li className="navbar__item">
-            <Link to="/medios-de-pago" className="navbar__link">Medios de Pago</Link>
-          </li>
+          <li className="navbar__item"><Link to="/ofertas" className="navbar__link">Ofertas</Link></li>
+          <li className="navbar__item"><Link to="/preguntas-frecuentes" className="navbar__link">Preguntas Frecuentes</Link></li>
         </ul>
       </div>
     </nav>

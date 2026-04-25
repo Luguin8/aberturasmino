@@ -1,90 +1,54 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import ProductCard from '../components/home/ProductCard';
-import { products } from '../data/mockProducts';
-import { categories } from '../data/mockCategories';
+import { supabase } from '../config/supabase';
 
 const CategoryPage = () => {
-  const { slug } = useParams();
-  const [category, setCategory] = useState(null);
-  const [filteredProducts, setFilteredProducts] = useState([]);
-  const [sortBy, setSortBy] = useState('relevant');
+  const { slug } = useParams(); // Usamos 'slug' pero internamente es el ID
+  const [products, setProducts] = useState([]);
+  const [categoryName, setCategoryName] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Find category
-    let foundCat = categories.find(c => c.slug === slug);
-    
-    // Check if it's a subcategory slug
-    if (!foundCat) {
-      categories.forEach(c => {
-        const sub = c.subcategories?.find(s => s.slug === slug);
-        if (sub) foundCat = sub;
-      });
-    }
+    const fetchData = async () => {
+      setLoading(true);
 
-    setCategory(foundCat);
+      if (slug === 'todos' || slug === 'destacados' || slug === 'ofertas') {
+        setCategoryName(slug === 'todos' ? 'Todos los Productos' : slug === 'destacados' ? 'Destacados' : 'Ofertas');
+        let query = supabase.from('products').select('*, product_variants(*)');
+        if (slug === 'destacados') query = query.eq('is_featured', true);
+        if (slug === 'ofertas') query = query.eq('in_offer', true);
 
-    // Filter products
-    let items = products.filter(p => 
-      p.categoryId === foundCat?.id || 
-      p.subcategoryId === foundCat?.id ||
-      p.categoryId === slug // fallback for legacy or direct slugs
-    );
+        const { data } = await query;
+        if (data) setProducts(data);
+      } else {
+        const { data: catData } = await supabase.from('categories').select('name').eq('id', slug).single();
+        if (catData) setCategoryName(catData.name);
 
-    // Handle special cases (Destacados, etc if they were slugs)
-    if (slug === 'destacados') items = products.filter(p => p.featured);
-    if (slug === 'ofertas') items = products.filter(p => p.inOffer);
+        const { data: prodData } = await supabase.from('products').select('*, product_variants(*)').eq('category_id', slug);
+        if (prodData) setProducts(prodData);
+      }
 
-    setFilteredProducts(items);
-    window.scrollTo(0, 0);
+      setLoading(false);
+    };
+    fetchData();
   }, [slug]);
-
-  const sortedProducts = [...filteredProducts].sort((a, b) => {
-    if (sortBy === 'price-low') return a.salePrice - b.salePrice;
-    if (sortBy === 'price-high') return b.salePrice - a.salePrice;
-    if (sortBy === 'newest') return b.id.localeCompare(a.id);
-    return 0; // Relevant (default)
-  });
 
   return (
     <Layout>
-      <div className="page-header">
-        <div className="container">
-          <h1 className="page-header__title">{category?.name || (slug === 'ofertas' ? 'Ofertas Especiales' : slug)}</h1>
-          <p className="page-header__subtitle">Explorá nuestra selección de {category?.name?.toLowerCase() || 'productos'}</p>
-        </div>
-      </div>
-
-      <div className="container category-page">
-        <div className="category-page__filters">
-          <span className="category-page__count">
-            Mostrando {filteredProducts.length} productos
-          </span>
-          <div className="category-page__sort">
-            <label htmlFor="sort">Ordenar por:</label>
-            <select id="sort" value={sortBy} onChange={(e) => setSortBy(e.target.value)}>
-              <option value="relevant">Más relevantes</option>
-              <option value="price-low">Menor precio</option>
-              <option value="price-high">Mayor precio</option>
-              <option value="newest">Novedades</option>
-            </select>
-          </div>
-        </div>
-
-        {filteredProducts.length === 0 ? (
-          <div style={{padding: '50px 0', textAlign: 'center'}}>
-            <h3>No se encontraron productos en esta categoría.</h3>
-            <Link to="/" className="product-info__btn product-info__btn--secondary" style={{maxWidth: '200px', margin: '20px auto'}}>
-              Volver al inicio
-            </Link>
-          </div>
-        ) : (
+      <div className="container section">
+        <h1 className="section-title text-center">{categoryName}</h1>
+        {loading ? (
+          <p className="text-center">Cargando productos...</p>
+        ) : products.length > 0 ? (
           <div className="product-grid">
-            {sortedProducts.map(product => (
+            {products.map(product => (
               <ProductCard key={product.id} product={product} />
             ))}
           </div>
+        ) : (
+          <p className="text-center">No hay productos en esta categoría por ahora.</p>
         )}
       </div>
     </Layout>

@@ -1,7 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { heroSlides } from '../../data/mockHeroSlides';
 import { Link } from 'react-router-dom';
+
+const heroSlides = [
+  {
+    id: 1,
+    title: "Calidad en Aberturas",
+    subtitle: "Fabricación a medida con los mejores materiales",
+    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    ctaText: "Ver Catálogo",
+    ctaLink: "/categoria/todos"
+  }
+];
 
 const HeroCarousel = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -13,52 +23,23 @@ const HeroCarousel = () => {
     return () => clearInterval(timer);
   }, []);
 
-  const nextSlide = () => {
-    setCurrentSlide((prev) => (prev === heroSlides.length - 1 ? 0 : prev + 1));
-  };
-
-  const prevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? heroSlides.length - 1 : prev - 1));
-  };
+  const nextSlide = () => setCurrentSlide(currentSlide === heroSlides.length - 1 ? 0 : currentSlide + 1);
+  const prevSlide = () => setCurrentSlide(currentSlide === 0 ? heroSlides.length - 1 : currentSlide - 1);
 
   return (
-    <section className="hero">
+    <div className="hero">
       {heroSlides.map((slide, index) => (
-        <div 
-          key={slide.id} 
-          className={`hero__slide ${index === currentSlide ? 'hero__slide--active' : ''}`}
-        >
-          <img src={slide.backgroundImage} alt={slide.title} className="hero__slide-bg" />
-          <div className="hero__slide-overlay"></div>
-          <div className="hero__slide-content">
-            <span className="hero__tag">{slide.tag}</span>
+        <div key={slide.id} className={`hero__slide ${index === currentSlide ? 'active' : ''}`} style={{ backgroundImage: `url(${slide.image})` }}>
+          <div className="hero__content container">
             <h2 className="hero__title">{slide.title}</h2>
             <p className="hero__subtitle">{slide.subtitle}</p>
-            <Link to={slide.ctaLink} className="hero__cta">
-              {slide.ctaText}
-              <ChevronRight size={18} />
-            </Link>
+            <Link to={slide.ctaLink} className="btn btn-primary">{slide.ctaText}</Link>
           </div>
         </div>
       ))}
-
-      <button className="hero__arrow hero__arrow--prev" onClick={prevSlide}>
-        <ChevronLeft size={20} />
-      </button>
-      <button className="hero__arrow hero__arrow--next" onClick={nextSlide}>
-        <ChevronRight size={20} />
-      </button>
-
-      <div className="hero__dots">
-        {heroSlides.map((_, index) => (
-          <button 
-            key={index} 
-            className={`hero__dot ${index === currentSlide ? 'hero__dot--active' : ''}`}
-            onClick={() => setCurrentSlide(index)}
-          />
-        ))}
-      </div>
-    </section>
+      <button className="hero__btn hero__btn--prev" onClick={prevSlide}><ChevronLeft size={24} /></button>
+      <button className="hero__btn hero__btn--next" onClick={nextSlide}><ChevronRight size={24} /></button>
+    </div>
   );
 };
 

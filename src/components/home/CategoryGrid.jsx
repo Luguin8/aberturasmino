@@ -1,22 +1,29 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { categories } from '../../data/mockCategories';
+import { supabase } from '../../config/supabase';
 
 const CategoryGrid = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCats = async () => {
+      const { data } = await supabase.from('categories').select('*');
+      if (data) setCategories(data);
+    };
+    fetchCats();
+  }, []);
+
   return (
-    <section className="categories-section">
+    <section className="category-grid section">
       <div className="container">
-        <div className="categories-grid">
+        <h2 className="section-title">Comprá por Categoría</h2>
+        <div className="category-grid__container">
           {categories.map((category) => (
-            <Link 
-              key={category.id} 
-              to={`/categoria/${category.slug}`} 
-              className="category-circle"
-            >
-              <div className="category-circle__image">
-                <img src={category.image} alt={category.name} />
+            <Link to={`/categoria/${category.id}`} key={category.id} className="category-card">
+              <div className="category-card__content">
+                <h3>{category.name}</h3>
+                <span>Ver productos</span>
               </div>
-              <span className="category-circle__name">{category.name}</span>
             </Link>
           ))}
         </div>
