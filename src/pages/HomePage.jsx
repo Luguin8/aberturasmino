@@ -3,6 +3,7 @@ import Layout from '../components/layout/Layout';
 import HeroCarousel from '../components/home/HeroCarousel';
 import CategoryGrid from '../components/home/CategoryGrid';
 import ProductRow from '../components/home/ProductRow';
+import Container from '../components/ui/Container';
 import { supabase } from '../config/supabase';
 
 const HomePage = () => {
@@ -13,7 +14,6 @@ const HomePage = () => {
     const fetchHomeData = async () => {
       try {
         setLoading(true);
-        // Traemos productos con sus variantes para tener los precios actualizados
         const { data, error } = await supabase
           .from('products')
           .select('*, product_variants(*)');
@@ -30,20 +30,18 @@ const HomePage = () => {
     fetchHomeData();
   }, []);
 
-  // Filtramos los productos según las propiedades de la base de datos
   const featuredProducts = products.filter(p => p.is_featured);
   const offerProducts = products.filter(p => p.in_offer);
-
-  // Ejemplo: Filtrar por una categoría específica (puedes usar el UUID de tu tabla categories)
-  // Reemplaza 'ID_DE_TU_CATEGORIA' por el UUID real que veas en Supabase
-  const windows = products.filter(p => p.category_id === 'ID_DE_TU_CATEGORIA_DE_VENTANAS');
 
   if (loading) {
     return (
       <Layout>
-        <div className="container" style={{ padding: '100px 0', textAlign: 'center' }}>
-          <p>Cargando catálogo de aberturas...</p>
-        </div>
+        <Container className="py-40 text-center space-y-4">
+          <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto"></div>
+          <p className="text-gray-400 font-bold animate-pulse uppercase tracking-widest text-xs">
+            Cargando catálogo premium...
+          </p>
+        </Container>
       </Layout>
     );
   }
@@ -69,20 +67,13 @@ const HomePage = () => {
         />
       )}
 
-      {/* Si aún no tienes productos cargados, mostramos una fila con todo el catálogo */}
-      {products.length > 0 && featuredProducts.length === 0 && (
-        <ProductRow
-          title="Nuestros Productos"
-          products={products}
-          seeAllLink="/categoria/todos"
-        />
-      )}
-
       {products.length === 0 && (
-        <div className="container text-center p-5">
-          <h3>Próximamente nuevos productos</h3>
-          <p>Estamos actualizando nuestro catálogo digital.</p>
-        </div>
+        <Container className="py-20 text-center space-y-6">
+           <div className="max-w-md mx-auto p-12 rounded-3xl bg-gray-50 border border-dashed border-gray-200">
+              <h3 className="text-2xl font-black text-secondary mb-2 uppercase tracking-tight">Próximamente</h3>
+              <p className="text-gray-400 font-medium">Estamos actualizando nuestro catálogo digital con nuevas aberturas de alta gama.</p>
+           </div>
+        </Container>
       )}
     </Layout>
   );

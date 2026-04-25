@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { Search, User, ShoppingCart, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { siteConfig } from '../../data/siteConfig';
+import Button from '../ui/Button';
+import Container from '../ui/Container';
 
 const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,48 +17,72 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
   };
 
   return (
-    <header className="header">
-      <div className="container">
-        <button className="header__menu-btn" onClick={onMenuClick} style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer' }}>
+    <header className="sticky top-0 z-[200] bg-white/80 backdrop-blur-md border-b border-gray-100 py-4">
+      <Container className="flex items-center justify-between gap-8">
+        {/* Mobile Menu Button */}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          className="md:hidden" 
+          onClick={onMenuClick}
+        >
           <Menu size={24} />
-          <span style={{ fontSize: '15px', fontWeight: 'bold' }}>MENÚ</span>
-        </button>
+        </Button>
 
-        <Link to="/" className="header__logo">
-          <h1 className="header__logo-name">
-            Aberturas <span>Miño</span>
+        {/* Logo */}
+        <Link to="/" className="flex flex-col group">
+          <h1 className="text-2xl md:text-3xl font-black text-secondary leading-none tracking-tight">
+            Aberturas <span className="text-primary group-hover:text-primary-hover transition-colors">Miño</span>
           </h1>
-          <span className="header__logo-subtitle">{siteConfig.businessSubtitle}</span>
+          <span className="text-[10px] md:text-[11px] text-gray-400 font-bold uppercase tracking-[0.2em] mt-1">
+            {siteConfig.businessSubtitle}
+          </span>
         </Link>
 
-        <form className="header__search" onSubmit={handleSearch}>
+        {/* Search Bar - Desktop */}
+        <form 
+          className="hidden md:flex flex-1 max-w-xl relative" 
+          onSubmit={handleSearch}
+        >
           <input
             type="text"
-            className="header__search-input"
-            placeholder="Buscar productos..."
+            className="w-full h-12 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 pr-14 text-sm font-medium transition-all outline-none"
+            placeholder="Buscar aberturas, modelos, medidas..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button type="submit" className="header__search-btn" style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '0 15px' }}>
-            <Search size={18} />
-            <span style={{ fontWeight: 'bold' }}>Buscar</span>
+          <button 
+            type="submit" 
+            className="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-gray-400 hover:text-primary transition-colors"
+          >
+            <Search size={20} />
           </button>
         </form>
 
-        <div className="header__actions">
-          <Link to="/admin" className="header__action">
-            <User size={22} />
-            <span>Ingresá / Registrate</span>
+        {/* Actions */}
+        <div className="flex items-center gap-3 md:gap-5">
+          <Link to="/admin" className="hidden sm:block">
+            <Button variant="ghost" className="gap-2">
+              <User size={20} className="text-gray-400" />
+              <span className="text-sm">Admin</span>
+            </Button>
           </Link>
-          <button className="header__action header__cart-btn" onClick={onCartClick}>
-            <div className="position-relative">
-              <ShoppingCart size={22} />
-              {cartCount > 0 && <span className="header__cart-count">{cartCount}</span>}
-            </div>
-            <span>Mi Pedido</span>
-          </button>
+
+          <Button 
+            variant="secondary" 
+            className="relative gap-2" 
+            onClick={onCartClick}
+          >
+            <ShoppingCart size={20} />
+            <span className="hidden md:inline">Mi Pedido</span>
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-primary text-white text-[10px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white font-bold">
+                {cartCount}
+              </span>
+            )}
+          </Button>
         </div>
-      </div>
+      </Container>
     </header>
   );
 };

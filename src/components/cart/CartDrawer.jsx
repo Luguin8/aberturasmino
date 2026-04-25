@@ -1,10 +1,11 @@
 import React from 'react';
-import { X, ShoppingBag, Trash2, Plus, Minus, MessageCircle } from 'lucide-react';
+import { X, ShoppingBag, Trash2, Plus, Minus, MessageCircle, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { siteConfig } from '../../data/siteConfig';
+import Button from '../ui/Button';
 
 const CartDrawer = () => {
-  // Nota: Mantenemos las variables de contexto que usó tu socio
   const {
     cart,
     isCartOpen,
@@ -14,115 +15,141 @@ const CartDrawer = () => {
     cartTotal,
     cartCount
   } = useCart();
+  const navigate = useNavigate();
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('es-AR', {
       style: 'currency',
       currency: 'ARS',
       minimumFractionDigits: 0,
-    }).format(price || 0); // Protección por si el precio es 0
-  };
-
-  const handleWhatsAppCheckout = () => {
-    const message = `¡Hola, gente de Aberturas Miño! 👋\nQuisiera consultar la disponibilidad y confirmar el presupuesto de este pedido:\n\n` +
-      cart.map(item => {
-        const itemPrice = item.salePrice || item.price || 0;
-        return `- ${item.name} (Cantidad: ${item.quantity}) - ${formatPrice(itemPrice * item.quantity)}`;
-      }).join('\n') +
-      `\n\n*Total estimado: ${formatPrice(cartTotal)}*` +
-      `\n\nEspero su respuesta, ¡gracias!`;
-
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${encodedMessage}`, '_blank');
+    }).format(price || 0);
   };
 
   return (
     <>
+      {/* Overlay */}
       <div
-        className={`cart-overlay ${isCartOpen ? 'cart-overlay--open' : ''}`}
+        className={`fixed inset-0 z-[300] bg-secondary/60 backdrop-blur-sm transition-opacity duration-500 ${
+          isCartOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
         onClick={() => setIsCartOpen(false)}
       ></div>
 
-      <div className={`cart-drawer ${isCartOpen ? 'cart-drawer--open' : ''}`}>
-        <div className="cart-drawer__header">
-          <div className="cart-drawer__title">
-            <ShoppingBag size={24} />
-            Mi Pedido
-            <span className="cart-drawer__count">{cartCount}</span>
-          </div>
-          <button className="cart-drawer__close" onClick={() => setIsCartOpen(false)}>
-            <X size={24} />
-          </button>
-        </div>
-
-        <div className="cart-drawer__items">
-          {(!cart || cart.length === 0) ? (
-            <div className="cart-drawer__empty">
-              <ShoppingBag size={64} />
-              <p>Aún no sumaste aberturas a tu pedido</p>
-              <button className="btn btn-primary" style={{ marginTop: '20px' }} onClick={() => setIsCartOpen(false)}>
-                Ver catálogo
-              </button>
-            </div>
-          ) : (
-            cart.map((item) => (
-              <div key={item.id} className="cart-item">
-                <div className="cart-item__image">
-                  {/* FIX BACKEND: Cambiado de item.images[0] a item.image con protección */}
-                  <img src={item.image || '/placeholder.png'} alt={item.name} />
-                </div>
-                <div className="cart-item__info">
-                  <h4 className="cart-item__name">{item.name}</h4>
-                  {/* FIX BACKEND: Protección contra precios nulos */}
-                  <div className="cart-item__price">{formatPrice(item.salePrice || item.price)}</div>
-                  <div className="cart-item__controls">
-                    <button
-                      className="cart-item__qty-btn"
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                    >
-                      <Minus size={14} />
-                    </button>
-                    <span className="cart-item__qty">{item.quantity}</span>
-                    <button
-                      className="cart-item__qty-btn"
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                    >
-                      <Plus size={14} />
-                    </button>
-                    <button
-                      className="cart-item__remove text-red"
-                      onClick={() => removeFromCart(item.id)}
-                      style={{ marginLeft: 'auto' }}
-                    >
-                      <Trash2 size={16} />
-                    </button>
-                  </div>
-                </div>
+      {/* Drawer */}
+      <div className={`fixed top-0 right-0 z-[301] h-full w-full max-w-md bg-white shadow-2xl transform transition-transform duration-500 ease-out ${
+        isCartOpen ? 'translate-x-0' : 'translate-x-full'
+      }`}>
+        <div className="flex flex-col h-full">
+          {/* Header */}
+          <div className="p-8 border-b border-gray-100 flex items-center justify-between bg-white sticky top-0 z-10">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center text-primary">
+                <ShoppingBag size={22} />
               </div>
-            ))
-          )}
-        </div>
-
-        {cart && cart.length > 0 && (
-          <div className="cart-drawer__footer">
-            <div className="cart-drawer__total">
-              <span className="cart-drawer__total-label">Total:</span>
-              <span className="cart-drawer__total-value">{formatPrice(cartTotal)}</span>
+              <div>
+                <h2 className="text-xl font-black text-secondary uppercase tracking-tight">Mi Pedido</h2>
+                <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{cartCount} Artículos</p>
+              </div>
             </div>
-            <div className="cart-drawer__transfer" style={{ fontSize: '13px', color: '#10b981', marginBottom: '15px' }}>
-              <span>Pagando por transferencia (20% OFF): </span>
-              <strong>{formatPrice(cartTotal * 0.8)}</strong>
-            </div>
-            <button
-              className="btn w-100"
-              style={{ backgroundColor: '#25D366', color: 'white', display: 'flex', justifyContent: 'center', gap: '8px' }}
-              onClick={handleWhatsAppCheckout}
+            <button 
+              className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-secondary" 
+              onClick={() => setIsCartOpen(false)}
             >
-              <MessageCircle size={20} />
-              Enviar Pedido por WhatsApp
+              <X size={24} />
             </button>
           </div>
-        )}
+
+          {/* Items */}
+          <div className="flex-1 overflow-y-auto p-8 space-y-6">
+            {(!cart || cart.length === 0) ? (
+              <div className="h-full flex flex-col items-center justify-center text-center space-y-6">
+                <div className="w-24 h-24 bg-gray-50 rounded-full flex items-center justify-center text-gray-200">
+                  <ShoppingBag size={48} />
+                </div>
+                <div>
+                  <h3 className="text-lg font-bold text-secondary mb-2">Tu pedido está vacío</h3>
+                  <p className="text-gray-400 text-sm max-w-[200px] mx-auto">Aún no sumaste ninguna abertura a tu presupuesto.</p>
+                </div>
+                <Button variant="primary" onClick={() => setIsCartOpen(false)}>
+                  Explorar Productos
+                </Button>
+              </div>
+            ) : (
+              cart.map((item) => (
+                <div key={item.id} className="group flex gap-4 bg-white rounded-2xl border border-transparent hover:border-gray-100 hover:shadow-lg hover:shadow-gray-100 transition-all p-2 -m-2">
+                  <div className="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden shrink-0 border border-gray-100">
+                    <img src={item.image || '/placeholder.png'} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  </div>
+                  <div className="flex flex-col flex-1 py-1">
+                    <div className="flex justify-between items-start mb-1">
+                      <h4 className="text-sm font-bold text-secondary line-clamp-2 leading-tight pr-4">{item.name}</h4>
+                      <button 
+                        className="text-gray-300 hover:text-red-500 transition-colors" 
+                        onClick={() => removeFromCart(item.id)}
+                      >
+                        <Trash2 size={16} />
+                      </button>
+                    </div>
+                    <p className="text-primary font-black text-sm mb-3">
+                      {formatPrice(item.salePrice || item.price)}
+                    </p>
+                    <div className="flex items-center gap-3 mt-auto">
+                      <div className="flex items-center bg-gray-50 rounded-lg p-1 border border-gray-100">
+                        <button 
+                          className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-secondary disabled:opacity-30" 
+                          onClick={() => updateQuantity(item.id, item.quantity - 1)}
+                          disabled={item.quantity <= 1}
+                        >
+                          <Minus size={12} />
+                        </button>
+                        <span className="w-8 text-center text-xs font-black text-secondary">{item.quantity}</span>
+                        <button 
+                          className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-secondary" 
+                          onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                        >
+                          <Plus size={12} />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* Footer */}
+          {cart && cart.length > 0 && (
+            <div className="p-8 bg-white border-t border-gray-100 space-y-6">
+              <div className="space-y-2">
+                <div className="flex justify-between items-center">
+                  <span className="text-gray-400 text-sm font-bold uppercase tracking-widest">Subtotal</span>
+                  <span className="text-xl font-black text-secondary">{formatPrice(cartTotal)}</span>
+                </div>
+                <div className="flex justify-between items-center p-3 bg-green-50 rounded-xl border border-green-100">
+                  <span className="text-green-700 text-[10px] font-black uppercase tracking-widest">Transferencia (20% OFF)</span>
+                  <span className="text-green-700 font-black">{formatPrice(cartTotal * 0.8)}</span>
+                </div>
+              </div>
+
+              <Button 
+                variant="secondary" 
+                className="w-full h-14 gap-3 text-base" 
+                onClick={() => {
+                  setIsCartOpen(false);
+                  navigate('/checkout');
+                }}
+              >
+                Confirmar Presupuesto
+                <ArrowRight size={20} />
+              </Button>
+              
+              <p className="text-center text-[10px] text-gray-400 font-medium leading-relaxed">
+                El envío se coordinará luego de confirmar el stock. <br />
+                Todos los precios están sujetos a cambios.
+              </p>
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

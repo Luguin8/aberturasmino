@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import TopBar from './TopBar';
 import Header from './Header';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -13,7 +12,6 @@ const Layout = ({ children }) => {
 
   return (
     <div className="app-wrapper">
-      <TopBar />
       <Header 
         onMenuClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
         onCartClick={() => setIsCartOpen(true)}
