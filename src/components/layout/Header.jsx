@@ -48,24 +48,26 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
             </div>
           </Link>
 
-          {/* Buscador: Corregido el solapamiento con pl-14 */}
-          <form className="hidden md:flex flex-1 max-w-2xl relative group" onSubmit={handleSearch}>
-            <div className="absolute left-5 top-1/2 -translate-y-1/2 text-gray-400 group-focus-within:text-primary transition-colors">
-              <Search size={20} />
+          {/* Buscador: Refactorizado a Flex para evitar solapamientos */}
+          <form className="hidden md:flex flex-1 max-w-2xl group" onSubmit={handleSearch}>
+            <div className="relative w-full h-14 bg-gray-50 border-2 border-primary/20 focus-within:border-primary focus-within:bg-white rounded-2xl flex items-center transition-all overflow-hidden">
+              <div className="w-20 flex items-center justify-center text-primary/60 group-focus-within:text-primary transition-colors shrink-0">
+                <Search size={24} />
+              </div>
+              <input
+                type="text"
+                className="flex-1 h-full bg-transparent pl-2 pr-44 text-base font-bold text-secondary outline-none placeholder:text-gray-400"
+                placeholder="¿Qué estás buscando hoy?"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+              <button
+                type="submit"
+                className="search-button-custom absolute right-1.5 top-1.5 bottom-1.5"
+              >
+                BUSCAR
+              </button>
             </div>
-            <input
-              type="text"
-              className="w-full h-14 bg-gray-50 border-2 border-gray-100 focus:border-primary focus:bg-white rounded-2xl pl-14 pr-16 text-base font-bold text-secondary transition-all outline-none placeholder:text-gray-400"
-              placeholder="¿Qué estás buscando hoy?"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-            <button
-              type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 px-4 py-2 bg-primary text-white text-sm font-black rounded-xl hover:bg-primary-hover transition-colors"
-            >
-              BUSCAR
-            </button>
           </form>
 
           {/* Carrito y Admin */}
@@ -115,7 +117,7 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
                       className={`
                         flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-black transition-all whitespace-nowrap uppercase tracking-tighter
                         ${link.isHighlight
-                          ? 'bg-red-600 text-white hover:bg-red-700 shadow-sm'
+                          ? 'bg-primary text-white hover:bg-primary-hover shadow-sm'
                           : isActive
                             ? 'bg-white text-primary border border-gray-200 shadow-sm'
                             : 'text-gray-500 hover:text-primary hover:bg-white'
