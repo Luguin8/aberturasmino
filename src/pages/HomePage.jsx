@@ -69,10 +69,10 @@ const HomePage = () => {
 
       {products.length === 0 && (
         <Container className="py-20 text-center space-y-6">
-           <div className="max-w-md mx-auto p-12 rounded-3xl bg-gray-50 border border-dashed border-gray-200">
-              <h3 className="text-2xl font-black text-secondary mb-2 uppercase tracking-tight">Próximamente</h3>
-              <p className="text-gray-400 font-medium">Estamos actualizando nuestro catálogo digital con nuevas aberturas de alta gama.</p>
-           </div>
+          <div className="max-w-md mx-auto p-12 rounded-3xl bg-gray-50 border border-dashed border-gray-200">
+            <h3 className="text-2xl font-black text-secondary mb-2 uppercase tracking-tight">Próximamente</h3>
+            <p className="text-gray-400 font-medium">Estamos actualizando nuestro catálogo digital con nuevas aberturas de alta gama.</p>
+          </div>
         </Container>
       )}
     </Layout>

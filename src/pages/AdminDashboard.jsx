@@ -67,18 +67,18 @@ const AdminDashboard = () => {
               Desde aquí podés gestionar el catálogo de productos, controlar los pedidos entrantes y actualizar la información de tu sitio web de manera sencilla y eficiente.
             </p>
             <div className="flex flex-wrap justify-center md:justify-start gap-4">
-               <div className="px-6 py-3 bg-gray-50 rounded-xl flex items-center gap-2 border border-gray-100">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-xs font-bold text-gray-500">Sistema Conectado</span>
-               </div>
-               <div className="px-6 py-3 bg-gray-50 rounded-xl flex items-center gap-2 border border-gray-100">
-                  <div className="w-2 h-2 bg-primary rounded-full"></div>
-                  <span className="text-xs font-bold text-gray-500">Base de Datos OK</span>
-               </div>
+              <div className="px-6 py-3 bg-gray-50 rounded-xl flex items-center gap-2 border border-gray-100">
+                <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                <span className="text-xs font-bold text-gray-500">Sistema Conectado</span>
+              </div>
+              <div className="px-6 py-3 bg-gray-50 rounded-xl flex items-center gap-2 border border-gray-100">
+                <div className="w-2 h-2 bg-primary rounded-full"></div>
+                <span className="text-xs font-bold text-gray-500">Base de Datos OK</span>
+              </div>
             </div>
           </div>
           <div className="w-full md:w-1/3 aspect-square bg-gray-50 rounded-[3rem] overflow-hidden border border-gray-100 flex items-center justify-center p-10">
-             <TrendingUp size={120} className="text-primary opacity-20" />
+            <TrendingUp size={120} className="text-primary opacity-20" />
           </div>
         </div>
       </div>
