@@ -17,8 +17,9 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
   return (
     <header className="header">
       <div className="container">
-        <button className="header__menu-btn" onClick={onMenuClick}>
+        <button className="header__menu-btn" onClick={onMenuClick} style={{ display: 'flex', alignItems: 'center', gap: '5px', background: 'none', border: 'none', cursor: 'pointer' }}>
           <Menu size={24} />
+          <span style={{ fontSize: '15px', fontWeight: 'bold' }}>MENÚ</span>
         </button>
 
         <Link to="/" className="header__logo">
@@ -36,8 +37,9 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-          <button type="submit" className="header__search-btn">
+          <button type="submit" className="header__search-btn" style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '0 15px' }}>
             <Search size={18} />
+            <span style={{ fontWeight: 'bold' }}>Buscar</span>
           </button>
         </form>
 
@@ -51,7 +53,7 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
               <ShoppingCart size={22} />
               {cartCount > 0 && <span className="header__cart-count">{cartCount}</span>}
             </div>
-            <span>Carrito</span>
+            <span>Mi Pedido</span>
           </button>
         </div>
       </div>

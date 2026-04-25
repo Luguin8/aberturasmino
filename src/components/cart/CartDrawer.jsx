@@ -23,10 +23,10 @@ const CartDrawer = () => {
   };
 
   const handleWhatsAppCheckout = () => {
-    const message = `Hola! Quisiera realizar el siguiente pedido en Aberturas Miño:\n\n` +
-      cart.map(item => `- ${item.name} (Cantidad: ${item.quantity}) - ${formatPrice(item.salePrice * item.quantity)}`).join('\n') +
-      `\n\n*Total: ${formatPrice(cartTotal)}*` +
-      `\n\nMuchas gracias!`;
+    const message = `¡Hola, gente de Aberturas Miño! 👋\nQuisiera consultar la disponibilidad y confirmar el presupuesto de este pedido:\n\n` +
+     cart.map(item => `- ${item.name} (Cantidad: ${item.quantity}) - ${formatPrice(item.salePrice * item.quantity)}`).join('\n') +
+    `\n\n*Total estimado: ${formatPrice(cartTotal)}*` +
+    `\n\nEspero su respuesta, ¡gracias!`;
     
     const encodedMessage = encodeURIComponent(message);
     window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${encodedMessage}`, '_blank');
@@ -43,7 +43,7 @@ const CartDrawer = () => {
         <div className="cart-drawer__header">
           <div className="cart-drawer__title">
             <ShoppingBag size={24} />
-            Tu Carrito
+            Armar pedido
             <span className="cart-drawer__count">{cartCount}</span>
           </div>
           <button className="cart-drawer__close" onClick={() => setIsCartOpen(false)}>
@@ -55,13 +55,9 @@ const CartDrawer = () => {
           {cart.length === 0 ? (
             <div className="cart-drawer__empty">
               <ShoppingBag size={64} />
-              <p>Tu carrito está vacío</p>
-              <button 
-                className="product-info__btn product-info__btn--primary" 
-                style={{marginTop: '20px'}}
-                onClick={() => setIsCartOpen(false)}
-              >
-                Empezar a comprar
+              <p>Aún no sumaste aberturas a tu pedido</p>
+              <button className="product-info__btn product-info__btn--primary" style={{marginTop: '20px'}} onClick={() => setIsCartOpen(false)}>
+                Ver catálogo
               </button>
             </div>
           ) : (
@@ -116,7 +112,7 @@ const CartDrawer = () => {
               onClick={handleWhatsAppCheckout}
             >
               <MessageCircle size={20} />
-              Finalizar Pedido por WhatsApp
+              Enviar Pedido por WhatsApp
             </button>
           </div>
         )}

@@ -99,15 +99,15 @@ const ProductPage = () => {
 
               <div className="product-actions">
                 <button className="btn btn-primary" onClick={handleAddToCart}>
-                  <ShoppingCart size={20} /> Añadir al Carrito
+                 <ShoppingCart size={20} /> Sumar al pedido
                 </button>
                 <a
-                  href={`https://wa.me/5493794000000?text=Hola! Me interesa la ${product.name} en medida ${selectedVariant?.size}`}
+                  href={`https://wa.me/5493794000000?text=¡Hola! Quería hacerles una consulta sobre la ${product.name} en medida ${selectedVariant?.size}`}
                   className="btn btn-outline-success"
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  <MessageCircle size={20} /> Consultar por WhatsApp
+                <MessageCircle size={20} /> Consultar dudas por WhatsApp
                 </a>
               </div>
 
