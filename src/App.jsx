@@ -1,3 +1,4 @@
+import CheckoutPage from './pages/CheckoutPage';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './index.css';
@@ -46,6 +47,7 @@ function App() {
             <Route path="/admin/productos" element={<ProtectedRoute><AdminProducts /></ProtectedRoute>} />
 
             <Route path="*" element={<HomePage />} />
+            <Route path="/finalizar-pedido" element={<CheckoutPage />} />
           </Routes>
         </CartProvider>
       </AuthProvider>

@@ -39,7 +39,7 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
           />
           <button type="submit" className="header__search-btn" style={{ display: 'flex', alignItems: 'center', gap: '5px', padding: '0 15px' }}>
             <Search size={18} />
-            <span style={{ fontWeight: 'bold' }}>Buscar</span>
+            <span style={{ fontWeight: 'bold', fontSize: '10px' }}>BUSCAR</span>
           </button>
         </form>
 

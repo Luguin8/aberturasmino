@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import React from 'react';
 import { X, ShoppingBag, Trash2, Plus, Minus, MessageCircle } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
@@ -14,6 +15,7 @@ const CartDrawer = () => {
     cartTotal,
     cartCount
   } = useCart();
+  const navigate = useNavigate();
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('es-AR', {
@@ -21,19 +23,6 @@ const CartDrawer = () => {
       currency: 'ARS',
       minimumFractionDigits: 0,
     }).format(price || 0); // Protección por si el precio es 0
-  };
-
-  const handleWhatsAppCheckout = () => {
-    const message = `¡Hola, gente de Aberturas Miño! 👋\nQuisiera consultar la disponibilidad y confirmar el presupuesto de este pedido:\n\n` +
-      cart.map(item => {
-        const itemPrice = item.salePrice || item.price || 0;
-        return `- ${item.name} (Cantidad: ${item.quantity}) - ${formatPrice(itemPrice * item.quantity)}`;
-      }).join('\n') +
-      `\n\n*Total estimado: ${formatPrice(cartTotal)}*` +
-      `\n\nEspero su respuesta, ¡gracias!`;
-
-    const encodedMessage = encodeURIComponent(message);
-    window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${encodedMessage}`, '_blank');
   };
 
   return (
@@ -114,12 +103,13 @@ const CartDrawer = () => {
               <strong>{formatPrice(cartTotal * 0.8)}</strong>
             </div>
             <button
-              className="btn w-100"
-              style={{ backgroundColor: '#25D366', color: 'white', display: 'flex', justifyContent: 'center', gap: '8px' }}
-              onClick={handleWhatsAppCheckout}
+              className="cart-drawer__checkout-btn cart-drawer__checkout-btn--whatsapp"
+              onClick={() => {
+                setIsCartOpen(false); // Cierra el carrito
+                navigate('/finalizar-pedido'); // Te lleva a la página nueva
+              }}
             >
-              <MessageCircle size={20} />
-              Enviar Pedido por WhatsApp
+              Continuar con el Pedido
             </button>
           </div>
         )}

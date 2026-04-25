@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import heroLocal from '../../assets/hero.png';
 
 const heroSlides = [
   {
     id: 1,
     title: "Aberturas Miño",
-    subtitle: "Desde Esquina, Corrientes, directo para tu obra o tu campo. Fabricación a medida con la mejor calidad.",
-    image: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80",
+    subtitle: "Desde Esquina, Corrientes, directo para tu obra o tu campo...",
+    image: heroLocal,
     ctaText: "Ver catálogo de aberturas",
     ctaLink: "/categoria/todos"
   }
