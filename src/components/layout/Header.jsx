@@ -45,15 +45,17 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
     { label: 'Ofertas', path: '/ofertas', isHighlight: true },
   ];
 
+  const isCheckout = location.pathname === '/checkout';
+
   return (
-    <header className={`sticky top-0 z-[500] w-full bg-white shadow-sm border-b border-gray-100 transition-all duration-300 ${isScrolled ? 'py-1' : 'py-0'}`}>
+    <header className={`sticky top-0 z-[500] w-full bg-white shadow-sm border-b border-gray-100 transition-all duration-300 ${isScrolled || isCheckout ? 'py-1' : 'py-0'}`}>
       
       {/* Fila Principal */}
-      <div className={`transition-all duration-300 ${isScrolled ? 'py-2 md:py-3' : 'py-4 md:py-6'}`}>
+      <div className={`transition-all duration-300 ${isScrolled || isCheckout ? 'py-2 md:py-3' : 'py-4 md:py-6'}`}>
         <Container fluid clean className="px-6 md:px-10 lg:px-16 xl:px-20 grid grid-cols-3 md:flex items-center justify-between gap-4 md:gap-12 lg:gap-24">
 
-          {/* Menú Izquierda (Solo Mobile) */}
-          <div className="flex md:hidden items-center">
+          {/* Menú Izquierda (Solo Mobile) - Oculto en Checkout */}
+          <div className={`flex md:hidden items-center ${isCheckout ? 'invisible' : ''}`}>
             <Button
               variant="ghost"
               size="icon"
@@ -67,131 +69,150 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
           {/* Logo (Centrado en mobile, izquierda en desktop) */}
           <div className="flex justify-center md:justify-start">
             <Link to="/" className="flex items-center gap-2 md:gap-4 group flex-shrink-0">
-              <div className={`bg-secondary text-white rounded-xl flex items-center justify-center font-black text-[10px] transition-all group-hover:scale-105 ${isScrolled ? 'w-10 h-10' : 'w-11 h-11 md:w-14 md:h-14'}`}>
+              <div className={`bg-secondary text-white rounded-xl flex items-center justify-center font-black text-[10px] transition-all group-hover:scale-105 ${isScrolled || isCheckout ? 'w-10 h-10' : 'w-11 h-11 md:w-14 md:h-14'}`}>
                 AM
               </div>
               <div className="flex flex-col">
-                <h1 className={`font-black text-secondary leading-none transition-all ${isScrolled ? 'text-base md:text-xl' : 'text-lg md:text-2xl'}`}>
+                <h1 className={`font-black text-secondary leading-none transition-all ${isScrolled || isCheckout ? 'text-base md:text-xl' : 'text-lg md:text-2xl'}`}>
                   Aberturas <span className="text-primary">Miño</span>
                 </h1>
-                <p className={`text-gray-500 font-bold uppercase tracking-widest mt-0.5 md:mt-1 transition-all ${isScrolled ? 'text-[8px] md:text-[9px]' : 'text-[9px] md:text-[10px]'}`}>
+                <p className={`text-gray-500 font-bold uppercase tracking-widest mt-0.5 md:mt-1 transition-all ${isScrolled || isCheckout ? 'text-[8px] md:text-[9px]' : 'text-[9px] md:text-[10px]'}`}>
                   {siteConfig.businessSubtitle}
                 </p>
               </div>
             </Link>
           </div>
 
-          {/* Buscador Desktop */}
-          <form className="hidden md:flex flex-1 max-w-2xl group mx-8" onSubmit={handleSearch}>
-            <div className={`relative w-full bg-gray-50 border-2 border-primary/20 focus-within:border-primary focus-within:bg-white rounded-2xl flex items-center transition-all overflow-hidden ${isScrolled ? 'h-11' : 'h-14'}`}>
-              <div className="w-16 flex items-center justify-center text-primary/60 group-focus-within:text-primary transition-colors shrink-0">
-                <Search size={20} />
+          {/* Buscador Desktop - Oculto en Checkout */}
+          {!isCheckout && (
+            <form className="hidden md:flex flex-1 max-w-2xl group mx-8" onSubmit={handleSearch}>
+              <div className={`relative w-full bg-gray-50 border-2 border-primary/20 focus-within:border-primary focus-within:bg-white rounded-2xl flex items-center transition-all overflow-hidden ${isScrolled ? 'h-11' : 'h-14'}`}>
+                <div className="w-16 flex items-center justify-center text-primary/60 group-focus-within:text-primary transition-colors shrink-0">
+                  <Search size={20} />
+                </div>
+                <input
+                  type="text"
+                  className="flex-1 h-full bg-transparent pl-0 pr-32 text-sm font-bold text-secondary outline-none placeholder:text-gray-400"
+                  placeholder="¿Qué estás buscando hoy?"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+                <button
+                  type="submit"
+                  className="search-button-custom absolute right-1 top-1 bottom-1 px-6 text-[10px]"
+                >
+                  BUSCAR
+                </button>
               </div>
-              <input
-                type="text"
-                className="flex-1 h-full bg-transparent pl-0 pr-32 text-sm font-bold text-secondary outline-none placeholder:text-gray-400"
-                placeholder="¿Qué estás buscando hoy?"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <button
-                type="submit"
-                className="search-button-custom absolute right-1 top-1 bottom-1 px-6 text-[10px]"
-              >
-                BUSCAR
-              </button>
-            </div>
-          </form>
+            </form>
+          )}
 
           {/* Acciones Derecha */}
           <div className="flex items-center justify-end gap-1 md:gap-4 flex-shrink-0">
-            {/* Lupa Mobile */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="md:hidden w-10 h-10"
-              onClick={() => setIsSearchOpen(true)}
-            >
-              <Search size={22} className="text-secondary" />
-            </Button>
-
-            <Link to="/admin" className="hidden lg:block">
-              <Button variant="ghost" className="h-12 px-4 font-bold text-gray-600">
-                <User size={20} className="mr-2" /> Admin
+            {/* Lupa Mobile - Oculta en Checkout */}
+            {!isCheckout && (
+              <Button
+                variant="ghost"
+                size="icon"
+                className="md:hidden w-10 h-10"
+                onClick={() => setIsSearchOpen(true)}
+              >
+                <Search size={22} className="text-secondary" />
               </Button>
-            </Link>
+            )}
 
-            <button
-              onClick={onCartClick}
-              className={`relative flex items-center justify-center gap-2 bg-secondary text-white rounded-xl hover:bg-secondary-hover transition-all shadow-md active:scale-95 ${isScrolled ? 'h-10 px-3 md:h-12 md:px-6' : 'h-11 px-3 md:h-14 md:px-8'}`}
-            >
-              <ShoppingCart className="w-5 h-5 md:w-[22px] md:h-[22px]" />
-              <span className="hidden md:inline text-base font-black uppercase tracking-tight">Mi Pedido</span>
-              {cartCount > 0 && (
-                <span className="absolute -top-1 -right-1 bg-primary text-white text-[9px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white font-black shadow-sm">
-                  {cartCount}
-                </span>
-              )}
-            </button>
+            {/* Link Admin - Oculto en Checkout */}
+            {!isCheckout && (
+              <Link to="/admin" className="hidden lg:block">
+                <Button variant="ghost" className="h-12 px-4 font-bold text-gray-600">
+                  <User size={20} className="mr-2" /> Admin
+                </Button>
+              </Link>
+            )}
+
+            {isCheckout ? (
+              <Link to="/">
+                <Button variant="ghost" className="h-10 px-2 md:h-12 md:px-4 font-black text-gray-500 text-xs md:text-sm uppercase tracking-tight hover:text-primary transition-colors">
+                  ← Seguir comprando
+                </Button>
+              </Link>
+            ) : (
+              <button
+                onClick={onCartClick}
+                className={`relative flex items-center justify-center gap-2 bg-secondary text-white rounded-xl hover:bg-secondary-hover transition-all shadow-md active:scale-95 ${isScrolled ? 'h-10 px-3 md:h-12 md:px-6' : 'h-11 px-3 md:h-14 md:px-8'}`}
+              >
+                <ShoppingCart className="w-5 h-5 md:w-[22px] md:h-[22px]" />
+                <span className="hidden md:inline text-base font-black uppercase tracking-tight">Mi Pedido</span>
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 bg-primary text-white text-[9px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white font-black shadow-sm">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+            )}
           </div>
         </Container>
       </div>
 
-      {/* Categorías Mobile (3 principales) */}
-      <div className="md:hidden bg-white border-t border-gray-50 overflow-hidden">
-        <Container fluid clean className="px-4 py-2">
-          <ul className="flex items-center justify-between gap-1">
-            {mobileCategories.map((link) => (
-              <li key={link.label} className="flex-1">
-                <Link
-                  to={link.path}
-                  className={`
-                    flex items-center justify-center py-2 px-2 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all
-                    ${link.isHighlight
-                      ? 'bg-primary/10 text-primary border border-primary/20'
-                      : 'text-gray-500 active:bg-gray-50'
-                    }
-                  `}
-                >
-                  {link.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </Container>
-      </div>
-
-      {/* Navegación Desktop */}
-      <div className="hidden md:block bg-gray-50 border-t border-gray-100">
-        <Container fluid clean className="px-6 md:px-10 lg:px-16 xl:px-20">
-          <nav className="flex items-center justify-center overflow-x-auto no-scrollbar py-2">
-            <ul className="flex items-center gap-2">
-              {navLinks.map((link) => {
-                const isActive = location.pathname === link.path;
-                return (
-                  <li key={link.label}>
-                    <Link
-                      to={link.path}
-                      className={`
-                        flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-black transition-all whitespace-nowrap uppercase tracking-tighter
-                        ${link.isHighlight
-                          ? 'bg-primary text-white hover:bg-primary-hover shadow-sm'
-                          : isActive
-                            ? 'bg-white text-primary border border-gray-200 shadow-sm'
-                            : 'text-gray-500 hover:text-primary hover:bg-white'
-                        }
-                      `}
-                    >
-                      {link.icon}
-                      {link.label}
-                    </Link>
-                  </li>
-                );
-              })}
+      {/* Categorías Mobile (3 principales) - Ocultas en Checkout */}
+      {!isCheckout && (
+        <div className="md:hidden bg-white border-t border-gray-50 overflow-hidden">
+          <Container fluid clean className="px-4 py-2">
+            <ul className="flex items-center justify-between gap-1">
+              {mobileCategories.map((link) => (
+                <li key={link.label} className="flex-1">
+                  <Link
+                    to={link.path}
+                    className={`
+                      flex items-center justify-center py-2 px-2 rounded-lg text-[10px] font-black uppercase tracking-tighter transition-all
+                      ${link.isHighlight
+                        ? 'bg-primary/10 text-primary border border-primary/20'
+                        : 'text-gray-500 active:bg-gray-50'
+                      }
+                    `}
+                  >
+                    {link.label}
+                  </Link>
+                </li>
+              ))}
             </ul>
-          </nav>
-        </Container>
-      </div>
+          </Container>
+        </div>
+      )}
+
+      {/* Navegación Desktop - Oculta en Checkout */}
+      {!isCheckout && (
+        <div className="hidden md:block bg-gray-50 border-t border-gray-100">
+          <Container fluid clean className="px-6 md:px-10 lg:px-16 xl:px-20">
+            <nav className="flex items-center justify-center overflow-x-auto no-scrollbar py-2">
+              <ul className="flex items-center gap-2">
+                {navLinks.map((link) => {
+                  const isActive = location.pathname === link.path;
+                  return (
+                    <li key={link.label}>
+                      <Link
+                        to={link.path}
+                        className={`
+                          flex items-center gap-2 px-8 py-3 rounded-xl text-sm font-black transition-all whitespace-nowrap uppercase tracking-tighter
+                          ${link.isHighlight
+                            ? 'bg-primary text-white hover:bg-primary-hover shadow-sm'
+                            : isActive
+                              ? 'bg-white text-primary border border-gray-200 shadow-sm'
+                              : 'text-gray-500 hover:text-primary hover:bg-white'
+                          }
+                        `}
+                      >
+                        {link.icon}
+                        {link.label}
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </nav>
+          </Container>
+        </div>
+      )}
 
       {/* Overlay de Búsqueda Mobile */}
       {isSearchOpen && (
