@@ -3,12 +3,7 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   Package, 
-  Grid, 
-  Image as ImageIcon, 
-  HelpCircle, 
-  Settings, 
   LogOut,
-  ChevronLeft,
   ShoppingCart,
   Menu,
   X
@@ -25,10 +20,6 @@ const AdminLayout = ({ children, title }) => {
     { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
     { icon: Package, label: 'Productos', path: '/admin/productos' },
     { icon: ShoppingCart, label: 'Pedidos', path: '/admin/pedidos' },
-    { icon: Grid, label: 'Categorías', path: '/admin/categorias' },
-    { icon: ImageIcon, label: 'Banners / Hero', path: '/admin/banners' },
-    { icon: HelpCircle, label: 'FAQs', path: '/admin/faqs' },
-    { icon: Settings, label: 'Configuración', path: '/admin/config' },
   ];
 
   const handleLogout = () => {
