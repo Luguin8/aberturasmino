@@ -10,10 +10,10 @@ import { useCart } from '../../context/CartContext';
 
 const Layout = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isCartOpen, setIsCartOpen] = useState(false);
+
   const location = useLocation();
 
-  const { cartCount } = useCart();
+  const { cartCount, setIsCartOpen } = useCart();
 
   const navLinks = [
     { label: 'Inicio', path: '/', icon: <Home size={24} /> },
@@ -95,7 +95,7 @@ const Layout = () => {
 
       <Footer />
 
-      <CartDrawer isOpen={isCartOpen} onClose={() => setIsCartOpen(false)} />
+      <CartDrawer />
       <WhatsAppButton />
     </div>
   );

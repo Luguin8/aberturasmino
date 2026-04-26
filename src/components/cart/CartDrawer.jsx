@@ -29,14 +29,14 @@ const CartDrawer = () => {
     <>
       {/* Overlay */}
       <div
-        className={`fixed inset-0 z-[300] bg-secondary/60 backdrop-blur-sm transition-opacity duration-500 ${
+        className={`fixed inset-0 z-[1000] bg-secondary/60 backdrop-blur-sm transition-opacity duration-500 ${
           isCartOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
         onClick={() => setIsCartOpen(false)}
       ></div>
 
       {/* Drawer */}
-      <div className={`fixed top-0 right-0 z-[301] h-full w-full max-w-md bg-white shadow-2xl transform transition-transform duration-500 ease-out ${
+      <div className={`fixed top-0 right-0 z-[1001] h-full w-full max-w-md bg-white shadow-2xl transform transition-transform duration-500 ease-out ${
         isCartOpen ? 'translate-x-0' : 'translate-x-full'
       }`}>
         <div className="flex flex-col h-full">
@@ -122,14 +122,14 @@ const CartDrawer = () => {
             <div className="p-8 bg-white border-t border-gray-100 space-y-6">
               <div className="space-y-2">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-400 text-sm font-bold uppercase tracking-widest">Subtotal</span>
+                  <span className="text-gray-400 text-sm font-bold uppercase tracking-widest">Total</span>
                   <span className="text-xl font-black text-secondary">{formatPrice(cartTotal)}</span>
                 </div>
-                <div className="flex justify-between items-center p-3 bg-green-50 rounded-xl border border-green-100">
-                  <span className="text-green-700 text-[10px] font-black uppercase tracking-widest">Transferencia (20% OFF)</span>
-                  <span className="text-green-700 font-black">{formatPrice(cartTotal * 0.8)}</span>
-                </div>
               </div>
+
+              <p className="text-xs text-gray-500 italic text-center">
+                El precio final puede variar dependiendo del método de pago seleccionado en la página de checkout.
+              </p>
 
               <Button 
                 variant="secondary" 

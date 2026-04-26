@@ -123,10 +123,10 @@ const Header = ({ onMenuClick, onCartClick, cartCount = 0 }) => {
 
             <button
               onClick={onCartClick}
-              className={`relative flex items-center justify-center bg-secondary text-white rounded-xl hover:bg-secondary-hover transition-all shadow-md active:scale-95 ${isScrolled ? 'h-10 px-3 md:h-12 md:px-6' : 'h-11 px-3 md:h-14 md:px-8'}`}
+              className={`relative flex items-center justify-center gap-2 bg-secondary text-white rounded-xl hover:bg-secondary-hover transition-all shadow-md active:scale-95 ${isScrolled ? 'h-10 px-3 md:h-12 md:px-6' : 'h-11 px-3 md:h-14 md:px-8'}`}
             >
-              <ShoppingCart size={20} className="md:size-22" />
-              <span className="hidden md:inline ml-3 text-base font-black uppercase tracking-tight">Mi Pedido</span>
+              <ShoppingCart className="w-5 h-5 md:w-[22px] md:h-[22px]" />
+              <span className="hidden md:inline text-base font-black uppercase tracking-tight">Mi Pedido</span>
               {cartCount > 0 && (
                 <span className="absolute -top-1 -right-1 bg-primary text-white text-[9px] w-5 h-5 rounded-full flex items-center justify-center border-2 border-white font-black shadow-sm">
                   {cartCount}
