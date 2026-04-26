@@ -96,6 +96,11 @@ const CartDrawer = () => {
                         <Trash2 size={16} />
                       </button>
                     </div>
+                    {item.selectedOptionsSummary && (
+                      <p className="text-[10px] text-gray-400 font-bold uppercase tracking-tight mb-1">
+                        {item.selectedOptionsSummary}
+                      </p>
+                    )}
                     <p className="text-primary font-black text-sm mb-3">
                       {formatPrice(item.salePrice || item.price)}
                     </p>

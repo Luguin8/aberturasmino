@@ -82,7 +82,7 @@ const CheckoutPage = () => {
         `*Método de entrega:* ${buyerData.metodoEnvio === 'retiro' ? 'Retiro en local' : 'Envío a domicilio'}\n` +
         `------------------------\n\n` +
         `¡Hola! 👋 Quisiera confirmar el siguiente pedido:\n\n` +
-        cart.map(item => `- ${item.name} (x${item.quantity})`).join('\n') +
+        cart.map(item => `- ${item.name} (${item.selectedOptionsSummary}) (x${item.quantity})`).join('\n') +
         `\n\n*Método de Pago:* ${currentOption.name}` +
         `\n*Total a Pagar:* ${formatPrice(finalTotal)}` +
         `\n\nQuedo atento a la confirmación, ¡gracias!`;
@@ -268,6 +268,11 @@ const CheckoutPage = () => {
                           </button>
                         </div>
                         <p className="text-sm text-gray-400 font-bold uppercase tracking-widest">Cantidad: {item.quantity}</p>
+                        {item.selectedOptionsSummary && (
+                          <p className="text-[10px] text-primary font-black uppercase tracking-tight">
+                            {item.selectedOptionsSummary}
+                          </p>
+                        )}
                         <p className="text-xl font-black text-primary">{formatPrice((item.salePrice || item.price) * item.quantity)}</p>
                       </div>
                     </div>
