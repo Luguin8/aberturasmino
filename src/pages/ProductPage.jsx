@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useCart } from '../context/CartContext';
 import { supabase } from '../config/supabase';
-import { Check, ChevronRight, ShoppingCart, MessageCircle, ArrowLeft, ShieldCheck, Truck, RotateCcw } from 'lucide-react';
+import { Check, ChevronRight, ShoppingCart, MessageCircle, ArrowLeft, ShieldCheck, Truck, RotateCcw, ImageOff } from 'lucide-react';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 import Container from '../components/ui/Container';
@@ -90,11 +90,18 @@ const ProductPage = () => {
             {/* Image Gallery */}
             <div className="space-y-4">
               <div className="aspect-square bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-xl shadow-primary/5 group">
-                <img 
-                  src={product.image_url || '/placeholder.png'} 
-                  alt={product.name} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                />
+                {product.image_url && !product.image_url.includes('placeholder') ? (
+                  <img 
+                    src={product.image_url} 
+                    alt={product.name} 
+                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                  />
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-gray-400 gap-6">
+                    <ImageOff size={120} strokeWidth={1} className="opacity-50" />
+                    <span className="text-xs font-black uppercase tracking-[0.3em]">Imagen no disponible</span>
+                  </div>
+                )}
               </div>
             </div>
 

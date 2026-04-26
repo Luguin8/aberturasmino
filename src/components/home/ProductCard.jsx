@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShoppingCart, Eye } from 'lucide-react';
+import { ShoppingCart, Eye, ImageOff } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import Button from '../ui/Button';
@@ -42,11 +42,18 @@ const ProductCard = ({ product }) => {
     >
       {/* Image Wrapper */}
       <div className="relative aspect-square overflow-hidden bg-gray-50">
-        <img 
-          src={product.image_url || '/placeholder.png'} 
-          alt={product.name} 
-          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-        />
+        {product.image_url && !product.image_url.includes('placeholder') ? (
+          <img 
+            src={product.image_url} 
+            alt={product.name} 
+            className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+          />
+        ) : (
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-gray-400 gap-2">
+            <ImageOff size={40} strokeWidth={1.5} className="opacity-80" />
+            <span className="text-[10px] font-black uppercase tracking-widest">Sin foto</span>
+          </div>
+        )}
         
         {/* Badges */}
         <div className="absolute top-4 left-4 flex flex-col gap-2 z-10">

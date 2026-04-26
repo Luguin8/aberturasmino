@@ -1,5 +1,5 @@
 import React from 'react';
-import { X, ShoppingBag, Trash2, Plus, Minus, MessageCircle, ArrowRight } from 'lucide-react';
+import { X, ShoppingBag, Trash2, Plus, Minus, MessageCircle, ArrowRight, ImageOff } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { siteConfig } from '../../data/siteConfig';
@@ -78,7 +78,13 @@ const CartDrawer = () => {
               cart.map((item) => (
                 <div key={item.id} className="group flex gap-4 bg-white rounded-2xl border border-transparent hover:border-gray-100 hover:shadow-lg hover:shadow-gray-100 transition-all p-2 -m-2">
                   <div className="w-24 h-24 bg-gray-50 rounded-xl overflow-hidden shrink-0 border border-gray-100">
-                    <img src={item.image || '/placeholder.png'} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    {item.image && !item.image.includes('placeholder') ? (
+                      <img src={item.image} alt={item.name} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center bg-gray-100 text-gray-400">
+                        <ImageOff size={24} strokeWidth={1.5} className="opacity-70" />
+                      </div>
+                    )}
                   </div>
                   <div className="flex flex-col flex-1 py-1">
                     <div className="flex justify-between items-start mb-1">
