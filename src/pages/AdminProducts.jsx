@@ -19,9 +19,13 @@ const AdminProducts = () => {
   const initialFormState = {
     name: '', category_id: '', model: '', design: '', color: '',
     line_type: '', material: 'Aluminio', glass: '',
-    accessories: '', ideal_for: '', benefits: '', options: '',
+    accessories: [''], ideal_for: [''], benefits: [''], options: [''],
     image_url: '', is_featured: false, in_offer: false,
-    variants: [{ size: '', price: 0, sale_price: '', stock: 0, sku: '' }]
+    variants: [{ 
+      size: '', price: 0, price_repartido: 0, price_guia: 0, 
+      price_cortina: 0, price_postigo: 0, price_mosquitero: 0, 
+      price_reja: 0, sale_price: '', stock: 0, sku: '' 
+    }]
   };
 
   const [formData, setFormData] = useState(initialFormState);
@@ -41,12 +45,23 @@ const AdminProducts = () => {
     setEditingProduct(product);
     setFormData({
       ...product,
-      accessories: product.accessories?.join(', ') || '',
-      ideal_for: product.ideal_for?.join(', ') || '',
-      benefits: product.benefits?.join(', ') || '',
-      options: product.options?.join(', ') || '',
+      accessories: product.accessories?.length > 0 ? product.accessories : [''],
+      ideal_for: product.ideal_for?.length > 0 ? product.ideal_for : [''],
+      benefits: product.benefits?.length > 0 ? product.benefits : [''],
+      options: product.options?.length > 0 ? product.options : [''],
       variants: product.product_variants?.length > 0
-        ? product.product_variants.map(v => ({ ...v, sale_price: v.sale_price || '' }))
+        ? product.product_variants.map(v => ({ 
+            ...v, 
+            price: v.price || 0,
+            price_repartido: v.price_repartido || 0,
+            price_guia: v.price_guia || 0,
+            price_cortina: v.price_cortina || 0,
+            price_postigo: v.price_postigo || 0,
+            price_mosquitero: v.price_mosquitero || 0,
+            price_reja: v.price_reja || 0,
+            sale_price: v.sale_price || '',
+            stock: v.stock || 0
+          }))
         : initialFormState.variants
     });
     setIsModalOpen(true);
@@ -65,7 +80,14 @@ const AdminProducts = () => {
   };
 
   const handleAddVariant = () => {
-    setFormData({ ...formData, variants: [...formData.variants, { size: '', price: 0, sale_price: '', stock: 0, sku: '' }] });
+    setFormData({ 
+      ...formData, 
+      variants: [...formData.variants, { 
+        size: '', price: 0, price_repartido: 0, price_guia: 0, 
+        price_cortina: 0, price_postigo: 0, price_mosquitero: 0, 
+        price_reja: 0, sale_price: '', stock: 0, sku: '' 
+      }] 
+    });
   };
 
   const updateVariant = (index, field, value) => {
@@ -74,9 +96,20 @@ const AdminProducts = () => {
     setFormData({ ...formData, variants: newVariants });
   };
 
-  const stringToArray = (str) => {
-    if (!str || typeof str !== 'string') return [];
-    return str.split(',').map(item => item.trim()).filter(item => item !== '');
+  // Dynamic Lists Helpers
+  const addListItem = (field) => {
+    setFormData({ ...formData, [field]: [...formData[field], ''] });
+  };
+
+  const updateListItem = (field, index, value) => {
+    const newList = [...formData[field]];
+    newList[index] = value;
+    setFormData({ ...formData, [field]: newList });
+  };
+
+  const removeListItem = (field, index) => {
+    const newList = formData[field].filter((_, i) => i !== index);
+    setFormData({ ...formData, [field]: newList.length > 0 ? newList : [''] });
   };
 
   const handleSubmit = async (e) => {
@@ -94,10 +127,10 @@ const AdminProducts = () => {
         image_url: formData.image_url,
         is_featured: formData.is_featured,
         in_offer: formData.in_offer,
-        accessories: stringToArray(formData.accessories),
-        ideal_for: stringToArray(formData.ideal_for),
-        benefits: stringToArray(formData.benefits),
-        options: stringToArray(formData.options)
+        accessories: formData.accessories.filter(a => a.trim() !== ''),
+        ideal_for: formData.ideal_for.filter(i => i.trim() !== ''),
+        benefits: formData.benefits.filter(b => b.trim() !== ''),
+        options: formData.options.filter(o => o.trim() !== '')
       };
 
       let productId;
@@ -117,6 +150,12 @@ const AdminProducts = () => {
         product_id: productId,
         size: v.size,
         price: parseFloat(v.price) || 0,
+        price_repartido: parseFloat(v.price_repartido) || 0,
+        price_guia: parseFloat(v.price_guia) || 0,
+        price_cortina: parseFloat(v.price_cortina) || 0,
+        price_postigo: parseFloat(v.price_postigo) || 0,
+        price_mosquitero: parseFloat(v.price_mosquitero) || 0,
+        price_reja: parseFloat(v.price_reja) || 0,
         sale_price: v.sale_price ? parseFloat(v.sale_price) : null,
         stock: parseInt(v.stock) || 0,
         sku: v.sku || null
@@ -236,79 +275,208 @@ const AdminProducts = () => {
                 </Button>
               </div>
 
-              <form onSubmit={handleSubmit} className="space-y-10">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div className="space-y-2 md:col-span-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400">Nombre del Producto *</label>
-                    <input className="w-full h-14 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 font-bold transition-all outline-none" type="text" value={formData.name} required onChange={e => setFormData({ ...formData, name: e.target.value })} />
+              <form onSubmit={handleSubmit} className="space-y-12">
+                {/* SECCIÓN: Información Básica */}
+                <section className="bg-gray-50/50 p-8 rounded-[2rem] border border-gray-100">
+                  <h3 className="text-lg font-black text-secondary uppercase tracking-tight mb-6 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-primary rounded-full"></span>
+                    Información Básica
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Nombre del Producto *</label>
+                      <input className="w-full h-14 bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 font-bold transition-all outline-none shadow-sm" type="text" value={formData.name} required onChange={e => setFormData({ ...formData, name: e.target.value })} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Categoría</label>
+                      <select className="w-full h-14 bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 font-bold transition-all outline-none appearance-none shadow-sm cursor-pointer" value={formData.category_id} onChange={e => setFormData({ ...formData, category_id: e.target.value })}>
+                        <option value="">Seleccionar...</option>
+                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                      </select>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Modelo</label>
+                      <input className="w-full h-14 bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 font-bold transition-all outline-none shadow-sm" type="text" value={formData.model || ''} onChange={e => setFormData({ ...formData, model: e.target.value })} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Línea</label>
+                      <input className="w-full h-14 bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 font-bold transition-all outline-none shadow-sm" type="text" value={formData.line_type || ''} onChange={e => setFormData({ ...formData, line_type: e.target.value })} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Diseño</label>
+                      <input className="w-full h-14 bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 font-bold transition-all outline-none shadow-sm" type="text" value={formData.design || ''} onChange={e => setFormData({ ...formData, design: e.target.value })} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Color</label>
+                      <input className="w-full h-14 bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 font-bold transition-all outline-none shadow-sm" type="text" value={formData.color || ''} onChange={e => setFormData({ ...formData, color: e.target.value })} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Material</label>
+                      <input className="w-full h-14 bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 font-bold transition-all outline-none shadow-sm" type="text" value={formData.material || ''} onChange={e => setFormData({ ...formData, material: e.target.value })} />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Vidrio</label>
+                      <input className="w-full h-14 bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 font-bold transition-all outline-none shadow-sm" type="text" value={formData.glass || ''} onChange={e => setFormData({ ...formData, glass: e.target.value })} />
+                    </div>
                   </div>
+                </section>
 
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400">Categoría</label>
-                    <select className="w-full h-14 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 font-bold transition-all outline-none appearance-none" value={formData.category_id} onChange={e => setFormData({ ...formData, category_id: e.target.value })}>
-                      <option value="">Seleccionar...</option>
-                      {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </select>
+                {/* SECCIÓN: Imágenes y Flags */}
+                <section className="bg-gray-50/50 p-8 rounded-[2rem] border border-gray-100">
+                  <h3 className="text-lg font-black text-secondary uppercase tracking-tight mb-6 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-primary rounded-full"></span>
+                    Imágenes y Visibilidad
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="md:col-span-2 space-y-2">
+                      <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">URL de la Imagen Principal</label>
+                      <input className="w-full h-14 bg-white border-2 border-transparent focus:border-primary/20 rounded-2xl px-6 font-bold transition-all outline-none shadow-sm" type="text" value={formData.image_url} onChange={e => setFormData({ ...formData, image_url: e.target.value })} />
+                    </div>
+                    <div className="flex items-center gap-8 pt-6">
+                      <label className="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" className="w-6 h-6 rounded-lg border-2 border-gray-200 text-primary focus:ring-primary/20 transition-all cursor-pointer" checked={formData.is_featured} onChange={e => setFormData({ ...formData, is_featured: e.target.checked })} /> 
+                        <span className="text-sm font-bold text-gray-500 group-hover:text-secondary">Destacado</span>
+                      </label>
+                      <label className="flex items-center gap-3 cursor-pointer group">
+                        <input type="checkbox" className="w-6 h-6 rounded-lg border-2 border-gray-200 text-primary focus:ring-primary/20 transition-all cursor-pointer" checked={formData.in_offer} onChange={e => setFormData({ ...formData, in_offer: e.target.checked })} /> 
+                        <span className="text-sm font-bold text-gray-500 group-hover:text-secondary">En Oferta</span>
+                      </label>
+                    </div>
                   </div>
+                </section>
 
-                  <div className="space-y-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400">Línea (Ej: Herrero)</label>
-                    <input className="w-full h-14 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 font-bold transition-all outline-none" type="text" value={formData.line_type} onChange={e => setFormData({ ...formData, line_type: e.target.value })} />
+                {/* SECCIÓN: Listas y Detalles */}
+                <section className="bg-gray-50/50 p-8 rounded-[2rem] border border-gray-100">
+                  <h3 className="text-lg font-black text-secondary uppercase tracking-tight mb-8 flex items-center gap-2">
+                    <span className="w-2 h-2 bg-primary rounded-full"></span>
+                    Listas y Detalles
+                  </h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                    {[
+                      { label: 'Beneficios', field: 'benefits' },
+                      { label: 'Ideal Para', field: 'ideal_for' },
+                      { label: 'Accesorios', field: 'accessories' },
+                      { label: 'Opciones', field: 'options' }
+                    ].map((list) => (
+                      <div key={list.field} className="space-y-4">
+                        <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">{list.label}</label>
+                        <div className="space-y-3">
+                          {formData[list.field].map((item, idx) => (
+                            <div key={idx} className="flex gap-2">
+                              <input 
+                                className="flex-1 h-12 bg-white border-2 border-transparent focus:border-primary/20 rounded-xl px-5 font-bold transition-all outline-none shadow-sm text-sm" 
+                                type="text" 
+                                value={item} 
+                                onChange={(e) => updateListItem(list.field, idx, e.target.value)} 
+                                placeholder={`Agregar ${list.label.toLowerCase()}...`}
+                              />
+                              <Button 
+                                type="button" 
+                                variant="ghost" 
+                                size="icon" 
+                                className="w-12 h-12 text-red-400 hover:text-red-500 hover:bg-red-50 shrink-0" 
+                                onClick={() => removeListItem(list.field, idx)}
+                              >
+                                <Trash2 size={18} />
+                              </Button>
+                            </div>
+                          ))}
+                        </div>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          className="text-primary hover:bg-primary/10 w-full h-12 rounded-xl border-2 border-dashed border-primary/20 gap-2 text-xs font-bold uppercase tracking-widest" 
+                          onClick={() => addListItem(list.field)}
+                        >
+                          <Plus size={16} /> Agregar {list.label.split(' ')[0]}
+                        </Button>
+                      </div>
+                    ))}
                   </div>
+                </section>
 
-                  <div className="space-y-2 md:col-span-2">
-                    <label className="text-xs font-black uppercase tracking-widest text-gray-400">URL Imagen</label>
-                    <input className="w-full h-14 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-2xl px-6 font-bold transition-all outline-none" type="text" value={formData.image_url} onChange={e => setFormData({ ...formData, image_url: e.target.value })} />
-                  </div>
-
-                  <div className="flex gap-10 md:col-span-2 pt-4">
-                    <label className="flex items-center gap-3 cursor-pointer group">
-                      <input type="checkbox" className="w-6 h-6 rounded-lg border-2 border-gray-200 text-primary focus:ring-primary/20 transition-all cursor-pointer" checked={formData.is_featured} onChange={e => setFormData({ ...formData, is_featured: e.target.checked })} /> 
-                      <span className="text-sm font-bold text-gray-500 group-hover:text-secondary">Destacar Producto</span>
-                    </label>
-                    <label className="flex items-center gap-3 cursor-pointer group">
-                      <input type="checkbox" className="w-6 h-6 rounded-lg border-2 border-gray-200 text-primary focus:ring-primary/20 transition-all cursor-pointer" checked={formData.in_offer} onChange={e => setFormData({ ...formData, in_offer: e.target.checked })} /> 
-                      <span className="text-sm font-bold text-gray-500 group-hover:text-secondary">En Oferta</span>
-                    </label>
-                  </div>
-                </div>
-
-                <div className="bg-gray-50 p-8 rounded-[2rem] space-y-6">
-                  <div className="flex items-center justify-between">
-                    <h3 className="text-lg font-black text-secondary uppercase tracking-tight">Variantes (Medidas y Precios)</h3>
-                    <Button type="button" variant="ghost" className="text-primary hover:bg-primary/10" onClick={handleAddVariant}>+ Agregar</Button>
+                {/* SECCIÓN: Variantes y Precios */}
+                <section className="bg-gray-50/50 p-8 rounded-[2rem] border border-gray-100">
+                  <div className="flex items-center justify-between mb-8">
+                    <h3 className="text-lg font-black text-secondary uppercase tracking-tight flex items-center gap-2">
+                      <span className="w-2 h-2 bg-primary rounded-full"></span>
+                      Variantes y Precios
+                    </h3>
+                    <Button type="button" variant="primary" size="sm" className="h-10 px-6 gap-2" onClick={handleAddVariant}>
+                      <Plus size={16} /> Nueva Variante
+                    </Button>
                   </div>
                   
-                  <div className="space-y-4">
+                  <div className="space-y-6">
                     {formData.variants.map((v, i) => (
-                      <div key={i} className="grid grid-cols-2 md:grid-cols-5 gap-4 items-end bg-white p-6 rounded-2xl border border-gray-100 shadow-sm relative group">
-                        <div className="space-y-2 col-span-2 md:col-span-1">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Medida *</label>
-                          <input className="w-full h-10 bg-gray-50 rounded-lg px-4 text-xs font-bold" type="text" value={v.size} required onChange={e => updateVariant(i, 'size', e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Precio *</label>
-                          <input className="w-full h-10 bg-gray-50 rounded-lg px-4 text-xs font-bold" type="number" value={v.price} required onChange={e => updateVariant(i, 'price', e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Oferta</label>
-                          <input className="w-full h-10 bg-gray-50 rounded-lg px-4 text-xs font-bold" type="number" value={v.sale_price} onChange={e => updateVariant(i, 'sale_price', e.target.value)} />
-                        </div>
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-black uppercase tracking-widest text-gray-400">Stock</label>
-                          <input className="w-full h-10 bg-gray-50 rounded-lg px-4 text-xs font-bold" type="number" value={v.stock} onChange={e => updateVariant(i, 'stock', e.target.value)} />
-                        </div>
-                        <div className="flex justify-end">
-                          {i > 0 && (
-                            <Button type="button" variant="ghost" size="icon" className="text-red-300 hover:text-red-500 hover:bg-red-50" onClick={() => setFormData({ ...formData, variants: formData.variants.filter((_, idx) => idx !== i) })}>
-                              <Trash2 size={18} />
-                            </Button>
-                          )}
+                      <div key={i} className="bg-white p-8 rounded-[1.5rem] border border-gray-100 shadow-sm relative group">
+                        {i > 0 && (
+                          <button 
+                            type="button" 
+                            className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all" 
+                            onClick={() => setFormData({ ...formData, variants: formData.variants.filter((_, idx) => idx !== i) })}
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        )}
+
+                        <div className="space-y-8">
+                          {/* Fila 1: Datos Principales */}
+                          <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+                            <div className="space-y-2 col-span-2 md:col-span-1">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Medida *</label>
+                              <input className="w-full h-12 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none" type="text" value={v.size} required onChange={e => updateVariant(i, 'size', e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Precio Base *</label>
+                              <input className="w-full h-12 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none" type="number" value={v.price} required onChange={e => updateVariant(i, 'price', e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">P. Repartido</label>
+                              <input className="w-full h-12 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none" type="number" value={v.price_repartido} onChange={e => updateVariant(i, 'price_repartido', e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">P. Oferta</label>
+                              <input className="w-full h-12 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none text-primary" type="number" value={v.sale_price} onChange={e => updateVariant(i, 'sale_price', e.target.value)} />
+                            </div>
+                            <div className="space-y-2">
+                              <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Stock</label>
+                              <input className="w-full h-12 bg-gray-50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none" type="number" value={v.stock} onChange={e => updateVariant(i, 'stock', e.target.value)} />
+                            </div>
+                          </div>
+
+                          {/* Fila 2: Opcionales */}
+                          <div className="pt-6 border-t border-gray-50">
+                            <p className="text-[10px] font-black uppercase tracking-widest text-secondary mb-4 opacity-50">Adicionales (Precios Opcionales)</p>
+                            <div className="grid grid-cols-2 md:grid-cols-5 gap-6">
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Guía</label>
+                                <input className="w-full h-12 bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none" type="number" value={v.price_guia} onChange={e => updateVariant(i, 'price_guia', e.target.value)} />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Cortina</label>
+                                <input className="w-full h-12 bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none" type="number" value={v.price_cortina} onChange={e => updateVariant(i, 'price_cortina', e.target.value)} />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Postigo</label>
+                                <input className="w-full h-12 bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none" type="number" value={v.price_postigo} onChange={e => updateVariant(i, 'price_postigo', e.target.value)} />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Mosquitero</label>
+                                <input className="w-full h-12 bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none" type="number" value={v.price_mosquitero} onChange={e => updateVariant(i, 'price_mosquitero', e.target.value)} />
+                              </div>
+                              <div className="space-y-2">
+                                <label className="text-[10px] font-black uppercase tracking-widest text-gray-400 ml-1">Reja</label>
+                                <input className="w-full h-12 bg-gray-50/50 border-2 border-transparent focus:border-primary/20 focus:bg-white rounded-xl px-4 text-sm font-bold transition-all outline-none" type="number" value={v.price_reja} onChange={e => updateVariant(i, 'price_reja', e.target.value)} />
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
-                </div>
+                </section>
 
                 <div className="flex justify-end gap-4">
                   <Button type="button" variant="outline" className="h-14 px-10" onClick={() => setIsModalOpen(false)}>Cancelar</Button>
