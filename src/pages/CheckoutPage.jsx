@@ -17,6 +17,7 @@ const CheckoutPage = () => {
     dni: '',
     metodoEnvio: 'retiro'
   });
+  const [showErrors, setShowErrors] = useState(false);
   const navigate = useNavigate();
 
   const paymentOptions = [
@@ -62,6 +63,12 @@ const CheckoutPage = () => {
 
   const handleConfirmOrder = async () => {
     if (cart.length === 0) return;
+    
+    if (!buyerData.nombre || !buyerData.dni) {
+      setShowErrors(true);
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
@@ -172,7 +179,11 @@ const CheckoutPage = () => {
                           id="nombre"
                           type="text"
                           placeholder="Ej: Juan Pérez"
-                          className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-secondary"
+                          className={`w-full h-12 rounded-xl pl-12 pr-4 focus:outline-none focus:ring-2 transition-all font-medium ${
+                            showErrors && !buyerData.nombre 
+                              ? 'border-red-500 bg-red-50 focus:ring-red-500/20 focus:border-red-500 text-red-700' 
+                              : 'bg-gray-50 border border-gray-100 focus:ring-primary/20 focus:border-primary text-secondary'
+                          }`}
                           value={buyerData.nombre}
                           onChange={(e) => setBuyerData({ ...buyerData, nombre: e.target.value })}
                         />
@@ -190,7 +201,11 @@ const CheckoutPage = () => {
                           id="dni"
                           type="text"
                           placeholder="Ej: 12.345.678"
-                          className="w-full h-12 bg-gray-50 border border-gray-100 rounded-xl pl-12 pr-4 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all font-medium text-secondary"
+                          className={`w-full h-12 rounded-xl pl-12 pr-4 focus:outline-none focus:ring-2 transition-all font-medium ${
+                            showErrors && !buyerData.dni 
+                              ? 'border-red-500 bg-red-50 focus:ring-red-500/20 focus:border-red-500 text-red-700' 
+                              : 'bg-gray-50 border border-gray-100 focus:ring-primary/20 focus:border-primary text-secondary'
+                          }`}
                           value={buyerData.dni}
                           onChange={(e) => setBuyerData({ ...buyerData, dni: e.target.value })}
                         />
@@ -372,11 +387,17 @@ const CheckoutPage = () => {
                 </div>
 
                  <div className="space-y-3">
-                   <Button 
+                  {showErrors && (!buyerData.nombre || !buyerData.dni) && (
+                    <p className="text-red-500 text-sm font-bold text-center mt-2 animate-pulse">
+                      Por favor, completa los campos resaltados en rojo para continuar.
+                    </p>
+                  )}
+                  
+                  <Button 
                     variant="primary"
                     className="w-full h-14 text-base gap-3 shadow-xl shadow-primary/20"
                     onClick={handleConfirmOrder}
-                    disabled={isSubmitting || !buyerData.nombre || !buyerData.dni}
+                    disabled={isSubmitting}
                   >
                     {isSubmitting ? (
                       <>
