@@ -185,13 +185,17 @@ const CheckoutPage = () => {
                           id="nombre"
                           type="text"
                           placeholder="Ej: Juan Pérez"
+                          maxLength={50}
                           className={`w-full h-12 rounded-xl pl-12 pr-4 focus:outline-none focus:ring-2 transition-all font-medium ${
                             showErrors && !buyerData.nombre 
                               ? 'border-red-500 bg-red-50 focus:ring-red-500/20 focus:border-red-500 text-red-700' 
                               : 'bg-gray-50 border border-gray-100 focus:ring-primary/20 focus:border-primary text-secondary'
                           }`}
                           value={buyerData.nombre}
-                          onChange={(e) => setBuyerData({ ...buyerData, nombre: e.target.value })}
+                          onChange={(e) => {
+                            const sanitizedValue = e.target.value.replace(/<[^>]*>?/gm, '');
+                            setBuyerData({ ...buyerData, nombre: sanitizedValue });
+                          }}
                         />
                       </div>
                     </div>
@@ -207,13 +211,17 @@ const CheckoutPage = () => {
                           id="dni"
                           type="text"
                           placeholder="Ej: 12.345.678"
+                          maxLength={15}
                           className={`w-full h-12 rounded-xl pl-12 pr-4 focus:outline-none focus:ring-2 transition-all font-medium ${
                             showErrors && !buyerData.dni 
                               ? 'border-red-500 bg-red-50 focus:ring-red-500/20 focus:border-red-500 text-red-700' 
                               : 'bg-gray-50 border border-gray-100 focus:ring-primary/20 focus:border-primary text-secondary'
                           }`}
                           value={buyerData.dni}
-                          onChange={(e) => setBuyerData({ ...buyerData, dni: e.target.value })}
+                          onChange={(e) => {
+                            const sanitizedValue = e.target.value.replace(/<[^>]*>?/gm, '');
+                            setBuyerData({ ...buyerData, dni: sanitizedValue });
+                          }}
                         />
                       </div>
                     </div>
