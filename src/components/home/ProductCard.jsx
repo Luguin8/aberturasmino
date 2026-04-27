@@ -41,14 +41,19 @@ const ProductCard = ({ product }) => {
       className="group bg-white rounded-2xl border border-gray-100 overflow-hidden hover:shadow-2xl hover:shadow-primary/5 transition-all duration-500 flex flex-col h-full"
     >
       {/* Image Wrapper */}
-      <div className="relative aspect-square overflow-hidden bg-gray-50">
+      <div className="relative aspect-[4/3] w-full overflow-hidden bg-gray-50 animate-pulse">
         {product.image_url && !product.image_url.includes('placeholder') ? (
           <img 
             src={product.image_url} 
             alt={product.name} 
             loading="lazy"
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-            onError={(e) => { e.target.onerror = null; e.target.src = '/placeholder.png'; }}
+            onLoad={(e) => e.currentTarget.parentElement.classList.remove('animate-pulse')}
+            onError={(e) => { 
+              e.target.onerror = null; 
+              e.target.src = '/placeholder.png';
+              e.currentTarget.parentElement.classList.remove('animate-pulse');
+            }}
           />
         ) : (
           <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-gray-400 gap-2">

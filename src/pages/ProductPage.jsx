@@ -148,14 +148,19 @@ const ProductPage = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
             {/* Image Gallery */}
             <div className="space-y-4">
-              <div className="aspect-square bg-white rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-xl shadow-primary/5 group">
+              <div className="aspect-square w-full bg-gray-50 rounded-[2.5rem] overflow-hidden border border-gray-100 shadow-xl shadow-primary/5 group animate-pulse">
                 {product.image_url && !product.image_url.includes('placeholder') ? (
                   <img 
                     src={product.image_url} 
                     alt={product.name} 
                     loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
-                    onError={(e) => { e.target.onerror = null; e.target.src = '/placeholder.png'; }}
+                    onLoad={(e) => e.currentTarget.parentElement.classList.remove('animate-pulse')}
+                    onError={(e) => { 
+                      e.target.onerror = null; 
+                      e.target.src = '/placeholder.png';
+                      e.currentTarget.parentElement.classList.remove('animate-pulse');
+                    }}
                   />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-gray-400 gap-6">

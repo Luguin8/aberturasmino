@@ -248,10 +248,10 @@ const AdminProducts = () => {
                   </td>
                   <td className="p-0 md:p-6 block md:table-cell">
                     <div className="flex justify-end gap-2">
-                      <Button variant="ghost" size="icon" className="w-10 h-10 hover:bg-blue-50 text-blue-500" onClick={() => handleEdit(p)}>
+                      <Button variant="ghost" size="icon" className="w-10 h-10 hover:bg-blue-50 text-blue-500" onClick={() => handleEdit(p)} aria-label={`Editar producto ${p.name}`}>
                         <Edit2 size={18} />
                       </Button>
-                      <Button variant="ghost" size="icon" className="w-10 h-10 hover:bg-red-50 text-red-500" onClick={() => handleDelete(p.id)}>
+                      <Button variant="ghost" size="icon" className="w-10 h-10 hover:bg-red-50 text-red-500" onClick={() => handleDelete(p.id)} aria-label={`Eliminar producto ${p.name}`}>
                         <Trash2 size={18} />
                       </Button>
                     </div>
@@ -273,7 +273,7 @@ const AdminProducts = () => {
                 <h2 className="text-3xl font-black text-secondary uppercase tracking-tight">
                   {editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
                 </h2>
-                <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setIsModalOpen(false)}>
+                <Button variant="ghost" size="icon" className="rounded-full" onClick={() => setIsModalOpen(false)} aria-label="Cerrar formulario de producto">
                   <X size={24} />
                 </Button>
               </div>
@@ -380,6 +380,7 @@ const AdminProducts = () => {
                                 size="icon" 
                                 className="w-12 h-12 text-red-400 hover:text-red-500 hover:bg-red-50 shrink-0" 
                                 onClick={() => removeListItem(list.field, idx)}
+                                aria-label={`Eliminar ${list.label.toLowerCase().slice(0, -1)}`}
                               >
                                 <Trash2 size={18} />
                               </Button>
@@ -419,6 +420,7 @@ const AdminProducts = () => {
                             type="button" 
                             className="absolute top-4 right-4 w-10 h-10 flex items-center justify-center text-gray-300 hover:text-red-500 hover:bg-red-50 rounded-full transition-all" 
                             onClick={() => setFormData({ ...formData, variants: formData.variants.filter((_, idx) => idx !== i) })}
+                            aria-label="Eliminar variante"
                           >
                             <Trash2 size={18} />
                           </button>

@@ -54,6 +54,7 @@ const CartDrawer = () => {
             <button 
               className="p-2 hover:bg-gray-100 rounded-full transition-colors text-gray-400 hover:text-secondary" 
               onClick={() => setIsCartOpen(false)}
+              aria-label="Cerrar carrito de compras"
             >
               <X size={24} />
             </button>
@@ -92,6 +93,7 @@ const CartDrawer = () => {
                       <button 
                         className="text-gray-300 hover:text-red-500 transition-colors" 
                         onClick={() => removeFromCart(item.id)}
+                        aria-label={`Eliminar ${item.name} del carrito`}
                       >
                         <Trash2 size={16} />
                       </button>
@@ -110,6 +112,7 @@ const CartDrawer = () => {
                           className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-secondary disabled:opacity-30" 
                           onClick={() => updateQuantity(item.id, item.quantity - 1)}
                           disabled={item.quantity <= 1}
+                          aria-label="Disminuir cantidad"
                         >
                           <Minus size={12} />
                         </button>
@@ -117,6 +120,7 @@ const CartDrawer = () => {
                         <button 
                           className="w-6 h-6 flex items-center justify-center text-gray-400 hover:text-secondary" 
                           onClick={() => updateQuantity(item.id, item.quantity + 1)}
+                          aria-label="Aumentar cantidad"
                         >
                           <Plus size={12} />
                         </button>
