@@ -71,6 +71,7 @@ const HeroCarousel = () => {
             <img 
               src={slide.image} 
               alt={slide.title} 
+              loading="eager"
               className="w-full h-full object-cover scale-105 animate-slow-zoom" 
               onError={() => handleImageError(slide.id)}
             />

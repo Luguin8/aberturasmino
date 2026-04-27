@@ -148,7 +148,9 @@ const ProductPage = () => {
                   <img 
                     src={product.image_url} 
                     alt={product.name} 
+                    loading="lazy"
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-1000"
+                    onError={(e) => { e.target.onerror = null; e.target.src = '/placeholder.png'; }}
                   />
                 ) : (
                   <div className="w-full h-full flex flex-col items-center justify-center bg-gray-100 text-gray-400 gap-6">
