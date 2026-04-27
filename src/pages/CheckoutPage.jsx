@@ -65,6 +65,11 @@ const CheckoutPage = () => {
   const handleConfirmOrder = async () => {
     if (cart.length === 0) return;
     
+    // PASO 2 y 3: CÁLCULO SEGURO (RECALCULATION)
+    // Recalculamos el total internamente para mitigar inyecciones de precios desde el estado global
+    const secureTotal = cart.reduce((acc, item) => acc + ((item.salePrice || item.price) * (item.quantity || 1)), 0);
+    const finalSecureTotal = secureTotal * currentOption.modifier;
+
     if (!buyerData.nombre || !buyerData.dni) {
       setShowErrors(true);
       return;
@@ -78,7 +83,7 @@ const CheckoutPage = () => {
         customer_dni: buyerData.dni,
         delivery_method: buyerData.metodoEnvio,
         items: cart,
-        total: finalTotal,
+        total: finalSecureTotal, // PASO 4: Inserción segura usando finalSecureTotal
         status: 'Pendiente'
       };
 
@@ -98,7 +103,7 @@ const CheckoutPage = () => {
         `¡Hola! 👋 Quisiera confirmar el siguiente pedido:\n\n` +
         cart.map(item => `- ${item.name} (${item.selectedOptionsSummary}) (x${item.quantity})`).join('\n') +
         `\n\n*Método de Pago:* ${currentOption.name}` +
-        `\n*Total a Pagar:* ${formatPrice(finalTotal)}` +
+        `\n*Total a Pagar:* ${formatPrice(finalSecureTotal)}` +
         `\n\nQuedo atento a la confirmación, ¡gracias!`;
 
       const encodedMessage = encodeURIComponent(message);
