@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import ProductCard from '../components/home/ProductCard';
 import { supabase } from '../config/supabase';
 import Container from '../components/ui/Container';
@@ -10,8 +10,14 @@ const CategoryPage = () => {
   const [products, setProducts] = useState([]);
   const [categoryName, setCategoryName] = useState('');
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!slug || slug === 'undefined') {
+      navigate('/', { replace: true });
+      return;
+    }
+
     const fetchData = async () => {
       setLoading(true);
 
