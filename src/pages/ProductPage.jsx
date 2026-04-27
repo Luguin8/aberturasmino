@@ -24,6 +24,7 @@ const ProductPage = () => {
     mosquitero: false,
     reja: false
   });
+  const [isAdding, setIsAdding] = useState(false);
 
   // Reiniciar opciones al cambiar de variante
   useEffect(() => {
@@ -95,7 +96,10 @@ const ProductPage = () => {
   }, [slug, navigate]);
 
   const handleAddToCart = () => {
+    if (isAdding) return;
     if (!selectedVariant) return;
+
+    setIsAdding(true);
 
     addToCart({
       id: `${selectedVariant.id}-${selectedGlass}-${Object.entries(selectedOptionals).filter(([, v]) => v).map(([k]) => k).join('-')}`, // Unique ID for variant + options
@@ -108,6 +112,7 @@ const ProductPage = () => {
       image: product.image_url,
     });
     setIsCartOpen(true);
+    setTimeout(() => setIsAdding(false), 800);
   };
 
   const formatPrice = (price) => {
@@ -340,11 +345,12 @@ const ProductPage = () => {
               {/* Actions */}
               <div className="flex flex-col gap-4 mb-12">
                 <Button 
-                  className="h-20 gap-4 text-xl w-full shadow-xl shadow-primary/20" 
+                  className="h-20 gap-4 text-xl w-full shadow-xl shadow-primary/20 disabled:opacity-70 disabled:cursor-not-allowed" 
                   onClick={handleAddToCart}
+                  disabled={isAdding}
                 >
                   <ShoppingCart size={28} />
-                  Añadir al Pedido
+                  {isAdding ? 'Añadiendo...' : 'Añadir al Pedido'}
                 </Button>
                 <a 
                   href={`https://wa.me/${siteConfig.whatsappNumber}?text=¡Hola! Quería consultar sobre la ${product.name} en medida ${selectedVariant?.size}`}
