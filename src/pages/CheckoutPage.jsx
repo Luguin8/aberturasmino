@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { ShoppingBag, CreditCard, Banknote, MessageCircle, ArrowLeft, Trash2, CheckCircle2, ShieldCheck, ChevronRight, User, IdCard, Truck, Store } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import toast from 'react-hot-toast';
 import { siteConfig } from '../data/siteConfig';
 import { supabase } from '../config/supabase';
 import Button from '../components/ui/Button';
@@ -85,7 +86,7 @@ const CheckoutPage = () => {
       
       if (error) {
         console.error('Error saving order:', error);
-        alert("Error al guardar el pedido");
+        toast.error("Error al procesar el pedido");
         return;
       }
 
@@ -108,7 +109,7 @@ const CheckoutPage = () => {
       navigate('/success');
     } catch (err) {
       console.error(err);
-      alert("Error al guardar el pedido");
+      toast.error("Error al procesar el pedido");
     } finally {
       setIsSubmitting(false);
     }

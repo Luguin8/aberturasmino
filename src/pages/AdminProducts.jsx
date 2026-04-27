@@ -3,6 +3,7 @@ import AdminLayout from '../components/layout/AdminLayout';
 import { Plus, Edit2, Trash2, X, Search } from 'lucide-react';
 import { supabase } from '../config/supabase';
 import { useCart } from '../context/CartContext';
+import toast from 'react-hot-toast';
 import Button from '../components/ui/Button';
 import Badge from '../components/ui/Badge';
 
@@ -72,9 +73,10 @@ const AdminProducts = () => {
       try {
         const { error } = await supabase.from('products').delete().eq('id', id);
         if (error) throw error;
+        toast.success("Producto eliminado");
         fetchInitialData();
       } catch (err) {
-        alert("Error al eliminar: " + err.message);
+        toast.error("Error al eliminar: " + err.message);
       }
     }
   };
@@ -164,12 +166,13 @@ const AdminProducts = () => {
       const { error: vErr } = await supabase.from('product_variants').insert(variantsToInsert);
       if (vErr) throw vErr;
 
+      toast.success("Producto guardado correctamente");
       setIsModalOpen(false);
       setEditingProduct(null);
       setFormData(initialFormState);
       fetchInitialData();
     } catch (err) {
-      alert("Error: " + err.message);
+      toast.error(err.message);
     }
   };
 
