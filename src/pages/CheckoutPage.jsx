@@ -11,7 +11,7 @@ import Container from '../components/ui/Container';
 const CheckoutPage = () => {
   const { cart, cartTotal, removeFromCart, clearCart } = useCart();
   const [selectedPayment, setSelectedPayment] = useState('option1');
-  const [loading, setLoading] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [buyerData, setBuyerData] = useState({
     nombre: '',
     dni: '',
@@ -62,19 +62,25 @@ const CheckoutPage = () => {
 
   const handleConfirmOrder = async () => {
     if (cart.length === 0) return;
-    setLoading(true);
+    setIsSubmitting(true);
 
     try {
       const orderData = {
+        customer_name: buyerData.nombre,
+        customer_dni: buyerData.dni,
+        delivery_method: buyerData.metodoEnvio,
         items: cart,
         total: finalTotal,
-        payment_method: currentOption.name,
-        status: 'pending',
-        created_at: new Date().toISOString()
+        status: 'Pendiente'
       };
 
       const { error } = await supabase.from('orders').insert([orderData]);
-      if (error) console.error('Error saving order:', error);
+      
+      if (error) {
+        console.error('Error saving order:', error);
+        alert("Error al guardar el pedido");
+        return;
+      }
 
       const message = `*Datos del Comprador*\n` +
         `*Nombre:* ${buyerData.nombre}\n` +
@@ -88,15 +94,16 @@ const CheckoutPage = () => {
         `\n\nQuedo atento a la confirmación, ¡gracias!`;
 
       const encodedMessage = encodeURIComponent(message);
-      window.open(`https://wa.me/${siteConfig.whatsappNumber}?text=${encodedMessage}`, '_blank');
+      const whatsappUrl = `https://wa.me/${siteConfig.whatsappNumber}?text=${encodedMessage}`;
       
       clearCart();
+      window.open(whatsappUrl, '_blank');
       navigate('/success');
     } catch (err) {
       console.error(err);
-      alert('Ocurrió un error al procesar el pedido.');
+      alert("Error al guardar el pedido");
     } finally {
-      setLoading(false);
+      setIsSubmitting(false);
     }
   };
 
@@ -369,10 +376,13 @@ const CheckoutPage = () => {
                     variant="primary"
                     className="w-full h-14 text-base gap-3 shadow-xl shadow-primary/20"
                     onClick={handleConfirmOrder}
-                    disabled={loading || !buyerData.nombre || !buyerData.dni}
+                    disabled={isSubmitting || !buyerData.nombre || !buyerData.dni}
                   >
-                    {loading ? (
-                      <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    {isSubmitting ? (
+                      <>
+                        <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                        <span>Procesando...</span>
+                      </>
                     ) : (
                       <>
                         <MessageCircle size={22} />
