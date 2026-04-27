@@ -208,7 +208,7 @@ const AdminProducts = () => {
       ) : (
         <div className="bg-white rounded-[2rem] border border-gray-100 shadow-sm overflow-hidden">
           <table className="w-full text-left border-collapse">
-            <thead>
+            <thead className="hidden md:table-header-group">
               <tr className="bg-gray-50 border-b border-gray-100">
                 <th className="p-6 text-[10px] font-black uppercase tracking-widest text-gray-400">Producto</th>
                 <th className="p-6 text-[10px] font-black uppercase tracking-widest text-gray-400">Categoría</th>
@@ -219,9 +219,9 @@ const AdminProducts = () => {
             </thead>
             <tbody className="divide-y divide-gray-50">
               {filteredProducts.map(p => (
-                <tr key={p.id} className="hover:bg-gray-50/50 transition-colors">
-                  <td className="p-6">
-                    <div className="flex items-center gap-4">
+                <tr key={p.id} className="hover:bg-gray-50/50 transition-colors flex items-center justify-between p-4 border-b border-gray-100 md:table-row md:p-0 md:border-b-0">
+                  <td className="p-0 md:p-6 block md:table-cell">
+                    <div className="flex items-center gap-4 text-left">
                       <div className="w-12 h-12 rounded-xl bg-gray-50 overflow-hidden border border-gray-100 shrink-0">
                          <img src={p.image_url || '/placeholder.png'} className="w-full h-full object-cover" />
                       </div>
@@ -231,19 +231,19 @@ const AdminProducts = () => {
                       </div>
                     </div>
                   </td>
-                  <td className="p-6">
+                  <td className="p-6 hidden md:table-cell">
                     <Badge variant="default">{p.categories?.name || 'General'}</Badge>
                   </td>
-                  <td className="p-6 text-sm font-bold text-gray-500">
+                  <td className="p-6 text-sm font-bold text-gray-500 hidden md:table-cell">
                     {p.product_variants?.length} medidas
                   </td>
-                  <td className="p-6">
+                  <td className="p-6 hidden md:table-cell">
                     <div className="flex gap-2">
                       {p.is_featured && <Badge variant="featured">Destacado</Badge>}
                       {p.in_offer && <Badge variant="offer">Oferta</Badge>}
                     </div>
                   </td>
-                  <td className="p-6">
+                  <td className="p-0 md:p-6 block md:table-cell">
                     <div className="flex justify-end gap-2">
                       <Button variant="ghost" size="icon" className="w-10 h-10 hover:bg-blue-50 text-blue-500" onClick={() => handleEdit(p)}>
                         <Edit2 size={18} />
